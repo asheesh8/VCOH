@@ -4,411 +4,156 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vermont Comforts of Home — Supporting Vermonters to live with dignity &amp; choice</title>
-  <meta name="description" content="Vermont Comforts of Home is a non-profit program helping Vermonters live with dignity and choice through shared living, care coordination and skilled home care providers." />
+  <meta name="description" content="Vermont Comforts of Home is a non-profit program providing community-based care so Vermonters can live with dignity and choice." />
   <link rel="icon" href="assets/images/logo.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-  <!-- ============ NAV ============ -->
-  <nav class="nav" id="top">
-    <a class="nav-logo" href="#top" aria-label="Vermont Comforts of Home home">
+  <!-- HEADER + NAV -->
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Vermont Comforts of Home — Home">
       <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" />
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="nav-links">
-      <a href="#top">Home</a>
-      <a href="#programs" data-open-tab="participants">Participants</a>
-      <a href="#programs" data-open-tab="providers">Home Care Providers</a>
-      <a href="#about">About</a>
-      <a href="#contact" class="nav-cta">Contact Us</a>
+  </header>
+  <nav class="mainnav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <a href="index.html" class="active">Home</a>
+      <a href="participants.html">Participants</a>
+      <a href="home-care-providers.html">Home Care Providers</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </div>
   </nav>
 
-  <!-- ============ HERO ============ -->
-  <header class="hero" id="home">
-    <div class="hero-video" aria-hidden="true">
-      <video autoplay muted loop playsinline preload="auto" poster="assets/images/window.jpg">
-        <source src="assets/video/hero-source.mp4" type="video/mp4" />
-      </video>
+  <!-- HERO (video background, muted) -->
+  <section class="hero hero-home">
+    <video autoplay muted loop playsinline preload="auto" poster="assets/images/window.jpg">
+      <source src="assets/video/hero-source.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-inner">
+      <span class="eyebrow">A Vermont non-profit · Choices for Care</span>
+      <h1>Supporting Vermonters<br />to live with <span class="accent">dignity &amp; choice</span></h1>
+      <p class="hero-sub">Vermont Comforts of Home provides opportunities for greater independence.</p>
+      <div class="hero-cta">
+        <a href="contact.html" class="btn btn-ghost">Contact us</a>
+        <a href="home-care-providers.html" class="btn btn-plum">Become a provider</a>
+      </div>
     </div>
     <span class="muted-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
       Ambient video · sound off
     </span>
+  </section>
 
-    <div class="container hero-inner">
-      <span class="eyebrow reveal">A Vermont non-profit · Choices for Care</span>
-      <h1 class="reveal d1">Supporting Vermonters<br />to live with <span class="accent">dignity &amp; choice</span></h1>
-      <p class="hero-sub reveal d2">Being in a home environment, surrounded by familiar places and people who care about us, promotes wellness. We provide opportunities for greater independence.</p>
-      <div class="hero-cta reveal d3">
-        <a href="#programs" class="btn btn-ghost" data-open-tab="providers">
-          Become a provider
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="#contact" class="btn btn-primary">Contact us</a>
-      </div>
-      <div class="hero-trust reveal d4">
-        <div><b>40+</b><span>Years of experience</span></div>
-        <div><b>12</b><span>Vermont counties</span></div>
-        <div><b>2</b><span>Non-profit partners</span></div>
-      </div>
-    </div>
-
-    <a href="#mission" class="scroll-cue" aria-label="Scroll down">
-      <span class="mouse"></span>
-      Explore
-    </a>
-  </header>
-
-  <!-- ============ MISSION ============ -->
-  <section class="section mission" id="mission">
-    <div class="container mission-grid">
-      <div class="mission-copy reveal">
-        <span class="eyebrow">Who we are</span>
-        <p class="lead">At some point in our lives, we all need a helping hand. <span class="hl">Vermont Comforts of Home</span> believes home is where wellness begins.</p>
-        <p>Vermont Comforts of Home is a non-profit, collaborative program managed and implemented by <strong>Lincoln Street, Inc.</strong> and <strong>Upper Valley Services, Inc.</strong> — operating under Vermont's <strong>Choices for Care</strong> initiative.</p>
-        <p>Many people who require a nursing-home level of care prefer to keep living in their community. We are dedicated to providing quality, individualized services that make community living possible for the people we serve.</p>
-        <a href="#serve" class="btn btn-outline">See who we serve
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-      </div>
-      <div class="mission-media reveal d2">
-        <img src="assets/images/sonandmom.jpg" alt="A caregiver sharing a warm moment at home" />
-        <div class="mission-badge">
-          <svg class="cup" viewBox="0 0 64 64" fill="none">
-            <path d="M14 26h30v12a13 13 0 0 1-13 13H27a13 13 0 0 1-13-13V26z" fill="#fff" stroke="#5b4128" stroke-width="2.5"/>
-            <path d="M44 30h5a6 6 0 0 1 0 12h-5" fill="#fff" stroke="#5b4128" stroke-width="2.5"/>
-            <path d="M12 54h36" stroke="#5b4128" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M24 12c-2 3 2 5 0 8M32 10c-2 3 2 5 0 8M40 12c-2 3 2 5 0 8" stroke="#8a6a48" stroke-width="2.2" stroke-linecap="round"/>
-          </svg>
-          <div><b>Home is the heart</b><span>Familiar places, people who care</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="stats">
-        <div class="stat reveal"><b><span data-count="40" data-suffix="+">0</span></b><span>Years supporting Vermonters with disabilities</span></div>
-        <div class="stat reveal d1"><b><span data-count="2">0</span></b><span>Participants maximum in any one home</span></div>
-        <div class="stat reveal d2"><b><span data-count="12">0</span></b><span>Counties served across the state</span></div>
-        <div class="stat reveal d3"><b>Medicaid</b><span>Accepted, plus private pay options</span></div>
-      </div>
+  <!-- INTRO -->
+  <section class="section">
+    <div class="wrap-narrow lead-center reveal">
+      <div class="eyebrow-line" style="justify-content:center">Welcome</div>
+      <h2>Vermont Comforts of Home <span class="italic">provides opportunities for greater independence</span></h2>
+      <p>At some point in our lives, we all need a helping hand. Vermont Comforts of Home believes being in a home environment — surrounded by familiar places and people who care about us — promotes wellness. That is why we provide the support and services you need in a setting that offers the comforts of home.</p>
+      <p style="color:var(--green-deep);font-weight:700">Let Vermont Comforts of Home use our experience to help you be where you belong.</p>
     </div>
   </section>
 
-  <!-- ============ WHO WE SERVE ============ -->
-  <section class="section serve" id="serve">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Statewide reach</span>
-        <h2>A collaboration serving communities across Vermont</h2>
-        <p>Two trusted non-profits, one shared mission. Together we cover twelve counties — so care can stay close to home, family and community.</p>
+  <!-- ACROSS THE FENCE VIDEO -->
+  <section class="section tint">
+    <div class="wrap">
+      <div class="lead-center reveal" style="margin-bottom:34px">
+        <div class="eyebrow-line" style="justify-content:center">As seen on TV</div>
+        <h2>Vermont Comforts of Home on <span class="italic">‘Across the Fence’</span></h2>
       </div>
-      <div class="serve-grid">
-        <div class="serve-card reveal">
-          <h3><img src="assets/images/uvs-logo.jpg" alt="Upper Valley Services logo" /> Upper Valley Services</h3>
-          <p class="who">Serving the northern and central regions of the state.</p>
-          <div class="county-tags">
-            <span>Orange</span><span>Chittenden</span><span>Lamoille</span><span>Franklin</span>
-            <span>Grand Isle</span><span>Caledonia</span><span>Washington</span>
-          </div>
-        </div>
-        <div class="serve-card reveal d2">
-          <h3><img src="assets/images/lincoln-logo.jpg" alt="Lincoln Street, Inc. logo" /> Lincoln Street, Inc.</h3>
-          <p class="who">Serving the southern and western regions of the state.</p>
-          <div class="county-tags">
-            <span>Addison</span><span>Rutland</span><span>Windsor</span><span>Windham</span><span>Bennington</span>
-          </div>
-        </div>
-      </div>
-      <div class="serve-note reveal">
-        <span class="pill">Who qualifies</span>
-        <span>Vermont residents aged <strong style="color:#fff">18+</strong> who are Medicaid-qualifying or private pay, and need assistance with medical care, personal care, medications, mobility, decision-making or safely accessing the community.</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PROGRAMS (tabbed) ============ -->
-  <section class="section programs" id="programs">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Our programs</span>
-        <h2>Two ways to be part of the story</h2>
-        <p>Whether you need support to live well in your community — or you're ready to open your home and change a life — there's a place for you here.</p>
-      </div>
-
-      <div class="tabs reveal" role="tablist">
-        <button class="tab-btn active" data-tab="participants" role="tab">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          For Participants
-        </button>
-        <button class="tab-btn" data-tab="providers" role="tab">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M3 12l9-9 9 9M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
-          For Home Care Providers
+      <div class="video-embed reveal">
+        <button class="yt-facade" data-yt="OuBjZS6llns" aria-label="Play video: Vermont Comforts of Home on ‘Across the Fence’">
+          <img src="https://i.ytimg.com/vi/OuBjZS6llns/hqdefault.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src='assets/images/window.jpg'" />
+          <span class="yt-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span class="yt-label">Watch · ‘Across the Fence’ segment</span>
         </button>
       </div>
+    </div>
+  </section>
 
-      <!-- ===== PARTICIPANTS PANEL ===== -->
-      <div class="tab-panel active" id="participants" role="tabpanel">
-        <div class="prog-hero">
-          <div class="content reveal">
-            <span class="eyebrow">Participant services</span>
-            <h3>Community living, made possible</h3>
-            <p class="lead">We are social workers, nurses, psychologists and educators with over 40 years of experience supporting individuals with disabilities to live in the community.</p>
-            <p>When you are no longer able to live in your own home, one of our skilled home care providers may offer just the right home for you — with the support you need to keep living life on your terms.</p>
-          </div>
-          <div class="media reveal d2">
-            <img class="main-img" src="assets/images/wheelchair.jpg" alt="A participant enjoying independence" />
-            <img class="float-img" src="assets/images/nepali-women.jpg" alt="A participant and caregiver together" />
-          </div>
+  <!-- WHAT IS VCOH -->
+  <section class="section">
+    <div class="wrap">
+      <div class="block reverse reveal">
+        <div class="block-copy">
+          <div class="eyebrow-line">About the program</div>
+          <h2>What is Vermont Comforts of Home?</h2>
+          <p>Vermont Comforts of Home is a non-profit, collaborative program managed and implemented by <strong>Lincoln Street, Inc.</strong> and <strong>Upper Valley Services, Inc.</strong> Both agencies have significant experience providing high-quality, individualized home care.</p>
+          <p>Operating in compliance with the Adult Family Care program under Vermont's <strong>Choices for Care</strong> initiative, we develop community-based options of care for people requiring a nursing-home level of support. Once you contact us, we'll help determine the services needed and which of our two organizations can best serve you.</p>
         </div>
-
-        <div class="feature-grid">
-          <div class="fcard reveal">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-            <h4>Care Coordination</h4>
-            <ul>
-              <li>Create an individualized plan of care</li>
-              <li>Schedule &amp; coordinate medical care and appointments</li>
-              <li>Ensure safe medication management</li>
-              <li>Match you with caring, qualified Home Care Providers in your home community</li>
-              <li>Connect you to resources &amp; supports in the greater community</li>
-            </ul>
-          </div>
-          <div class="fcard reveal d1">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
-            <h4>Shared Living</h4>
-            <p>When living in your own home is no longer possible, a skilled provider opens their home to you. There are <strong>never more than two participants</strong> in any one provider's home — the right match, not a crowd.</p>
-          </div>
-          <div class="fcard reveal d2">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <h4>Who qualifies?</h4>
-            <p>If you are 18 or older and require a nursing-home level of care — extensive assistance with medical care, personal care, medications, mobility, decision-making, or safely accessing the community — you may qualify.</p>
-          </div>
-        </div>
-
-        <div class="callout cost reveal">
-          <div class="big">$826.65<span style="font-size:1rem;font-family:var(--sans);color:var(--muted)">/mo</span></div>
-          <p><strong>What does it cost?</strong> Most of our participants are eligible for <strong>Medicaid</strong>, which pays for most of these services. Participants contribute approximately <strong>$826.65 per month</strong> toward room &amp; board.</p>
-        </div>
-
-        <div class="callout opp reveal" style="margin-top:16px">
-          <span class="badge">The match matters</span>
-          <p><strong>How are participants placed?</strong> The key to this program's success is finding the right match of participant and provider. We currently serve Chittenden, Orange, Addison, Washington, Windham, Windsor and Caledonia counties. <a href="#contact" style="color:var(--green-700);font-weight:800">Reach out for more information →</a></p>
-        </div>
-      </div>
-
-      <!-- ===== PROVIDERS PANEL ===== -->
-      <div class="tab-panel" id="providers" role="tabpanel">
-        <div class="prog-hero">
-          <div class="content reveal">
-            <span class="eyebrow">Now recruiting</span>
-            <h3>Open your home. Change a life.</h3>
-            <p class="lead">We are seeking reliable, caring individuals willing to share their home and change the life of someone in their community.</p>
-            <p>We identify skilled people committed to providing the support that keeps individuals living in the community — and we back you every step of the way with the support of an Agency, a Care Coordinator, and needed respite.</p>
-            <a href="#contact" class="btn btn-dark" style="margin-top:6px">Become a provider
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-          </div>
-          <div class="media reveal d2">
-            <img class="main-img" src="assets/images/cooking.jpg" alt="A home care provider cooking together with a participant" />
-            <img class="float-img" src="assets/images/dadanddaughter.jpg" alt="A provider and participant sharing a moment" />
-          </div>
-        </div>
-
-        <div class="callout opp reveal">
-          <span class="badge">New in Vermont</span>
-          <p><strong>Now paying family caregivers.</strong> Vermont now allows payments to adult children caring for their parents. All current eligibility criteria and regulations apply.</p>
-        </div>
-
-        <div class="feature-grid" style="margin-top:26px">
-          <div class="fcard reveal">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></div>
-            <h4>Provider responsibilities</h4>
-            <ul>
-              <li>24-hour support and supervision</li>
-              <li>Assistance with personal care &amp; medication management</li>
-              <li>Meal preparation</li>
-              <li>Scheduling appointments &amp; transportation</li>
-            </ul>
-          </div>
-          <div class="fcard reveal d1">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h4>Qualifications &amp; requirements</h4>
-            <ul>
-              <li>Reliable, caring, responsible people who want to make a difference</li>
-              <li>Criminal background check</li>
-              <li>Home safety inspection</li>
-              <li>Maintain homeowners &amp; motor vehicle insurance</li>
-            </ul>
-          </div>
-          <div class="fcard reveal d2">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C5.5 14.5 3 11 3 8a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 3-2.5 6.5-9 13z"/></svg></div>
-            <h4>What you receive</h4>
-            <ul>
-              <li>A very generous stipend</li>
-              <li>Monthly room &amp; board payments</li>
-              <li>Any additional training you need</li>
-              <li>Ongoing support from a skilled Care Coordinator</li>
-            </ul>
-          </div>
+        <div class="block-media">
+          <img src="assets/images/window.jpg" alt="A warm Vermont home with a mountain view" />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ QUOTE ============ -->
-  <section class="section quote-band">
-    <div class="container reveal">
-      <div class="mark">&ldquo;</div>
-      <blockquote>One person caring about another represents life's greatest value.</blockquote>
-      <cite>— Jim Rohn</cite>
-    </div>
-  </section>
-
-  <!-- ============ PHOTO MARQUEE ============ -->
-  <div class="gallery" aria-label="Moments from our community">
-    <div class="marquee">
-      <img src="assets/images/plaidscarf.jpg" alt="" />
-      <img src="assets/images/ladies.jpg" alt="" />
-      <img src="assets/images/ladywithdog.jpg" alt="" />
-      <img src="assets/images/asian.jpg" alt="" />
-      <img src="assets/images/puzzle.jpg" alt="" />
-      <img src="assets/images/care1.jpg" alt="" />
-      <img src="assets/images/nepali-man.jpg" alt="" />
-      <img src="assets/images/care3.jpg" alt="" />
-      <!-- duplicate set for seamless loop -->
-      <img src="assets/images/plaidscarf.jpg" alt="" />
-      <img src="assets/images/ladies.jpg" alt="" />
-      <img src="assets/images/ladywithdog.jpg" alt="" />
-      <img src="assets/images/asian.jpg" alt="" />
-      <img src="assets/images/puzzle.jpg" alt="" />
-      <img src="assets/images/care1.jpg" alt="" />
-      <img src="assets/images/nepali-man.jpg" alt="" />
-      <img src="assets/images/care3.jpg" alt="" />
-    </div>
-  </div>
-
-  <!-- ============ ABOUT / VALUES ============ -->
-  <section class="section about" id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="reveal">
-          <span class="eyebrow">About us</span>
-          <h2 style="font-size:clamp(2rem,4vw,2.9rem);color:var(--green-900)">A choice, when living at home is no longer possible</h2>
-          <p style="color:var(--muted);font-size:1.1rem">The goal of Vermont Comforts of Home is to provide a choice when, due to medical and personal care needs, a person can no longer live at home without support. The program is jointly marketed by two Vermont organizations — Lincoln Street, Inc. and Upper Valley Services, Inc.</p>
-          <div class="values">
-            <div class="value">
-              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
-              <div><h4>Every voice matters</h4><p>All people, regardless of age or care needs, should have a voice in how they are supported and where they live.</p></div>
-            </div>
-            <div class="value">
-              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-              <div><h4>What we provide</h4><p>Care coordination, residential support and safety — in compliance with the Adult Family Care program under Vermont's Choices for Care.</p></div>
-            </div>
-          </div>
-        </div>
-        <div class="about-media reveal d2">
-          <img src="assets/images/plaidscarf.jpg" alt="A participant smiling" />
-          <img src="assets/images/asian.jpg" alt="A caregiver and participant" />
-          <img src="assets/images/care5.jpg" alt="A moment of connection" />
-        </div>
+  <!-- WHO WE SERVE -->
+  <section class="section plum-tint">
+    <div class="wrap">
+      <div class="lead-center reveal" style="margin-bottom:26px">
+        <div class="eyebrow-line" style="justify-content:center">Eligibility</div>
+        <h2>Who does Vermont Comforts of Home serve?</h2>
       </div>
-
-      <!-- STAFF + PARTNERS -->
-      <div class="staff-wrap">
-        <div class="staff-col reveal">
-          <div class="head">
-            <img src="assets/images/uvs-logo.jpg" alt="Upper Valley Services" />
-            <div class="meta">
-              <strong style="font-family:var(--serif);font-size:1.2rem;color:var(--green-900)">Upper Valley Services</strong>
-              <small><a href="https://uvs-vt.org" target="_blank" rel="noopener">uvs-vt.org</a></small>
-            </div>
-          </div>
-          <div class="staff-names">
-            <span>Marie Zura</span><span>Mukti Subedi</span><span>Yam Basnet</span><span>Tanya Cusson</span>
-            <span>John Hooley</span><span>Mary Mougey</span><span>Desireah Ladieu</span><span>Moni Monger</span>
-            <span>Juliane Anderson</span><span>Nirmala Adhikari</span><span>Pampha Champlin</span><span>Som Dahal</span>
-            <span>Prasan Mager</span><span>Ivory Racine</span><span>Susmita Mangar</span><span>Ashok Rai</span>
-            <span>Budhi Monger</span><span>Gopal Niroula</span>
-          </div>
-          <div class="staff-contact">80 Pearl Street, PO Box 5493, Essex Junction, VT 05452 · <a href="tel:8026625978">802-662-5978</a></div>
-        </div>
-        <div class="staff-col reveal d2">
-          <div class="head">
-            <img src="assets/images/lincoln-logo.jpg" alt="Lincoln Street, Inc." />
-            <div class="meta">
-              <strong style="font-family:var(--serif);font-size:1.2rem;color:var(--green-900)">Lincoln Street, Inc.</strong>
-              <small><a href="https://lincolnstreetinc.org" target="_blank" rel="noopener">lincolnstreetinc.org</a></small>
-            </div>
-          </div>
-          <div class="staff-names">
-            <span>Heather Hall</span><span>Regina Clark</span><span>Caroline Morgan</span>
-          </div>
-          <div class="staff-contact">374 River Street, Springfield, VT 05156 · <a href="tel:8028861833">802-886-1833</a></div>
-        </div>
+      <div class="serve-list reveal">
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span>Vermont residents.</span></div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span>Those who qualify for Medicaid, as well as those interested in a private-pay option.</span></div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span>Those who are 18 years of age or older and require extensive assistance with any of the following: medical care, personal care, taking medications, mobility, decision-making, or safely accessing the community.</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ CONTACT ============ -->
-  <section class="section contact" id="contact">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Get in touch</span>
-        <h2>We'd love to hear from you</h2>
-        <p>For more information, please use this contact form or call <a href="tel:8026625978" style="color:#ffe9b8;font-weight:800">802-662-5978</a>. A collaboration between Upper Valley Services and Lincoln Street, Inc.</p>
+  <!-- TWO PATHS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="lead-center reveal" style="margin-bottom:34px">
+        <div class="eyebrow-line" style="justify-content:center">How we help</div>
+        <h2>Support for participants <span class="italic">and</span> home care providers</h2>
       </div>
-
-      <div class="contact-grid">
-        <div class="office-cards reveal">
-          <div class="office">
-            <h4>Upper Valley Services</h4>
-            <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 80 Pearl Street, PO Box 5493<br />Essex Junction, VT 05452</p>
-            <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> <a href="tel:8026625978" class="tel">802-662-5978</a></p>
+      <div class="card-2">
+        <article class="pcard reveal">
+          <img src="assets/images/sonandmom.jpg" alt="A participant with a caregiver" />
+          <div class="body">
+            <h3>Participants</h3>
+            <p>Many people who require a nursing-home level of care prefer living in the community. We are dedicated to providing quality, individualized services that make community living possible for our participants.</p>
+            <a class="learn" href="participants.html">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
-          <div class="office">
-            <h4>Lincoln Street, Inc.</h4>
-            <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 374 River Street<br />Springfield, VT 05156</p>
-            <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> <a href="tel:8028861833" class="tel">802-886-1833</a></p>
+        </article>
+        <article class="pcard reveal">
+          <img src="assets/images/cooking.jpg" alt="A home care provider" />
+          <div class="body">
+            <h3>Home Care Providers</h3>
+            <p>We identify skilled people in the community interested in sharing their home and committed to providing the support necessary to keep individuals in the community.</p>
+            <a class="learn" href="home-care-providers.html">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
-        </div>
-
-        <form class="contact-form reveal d2" id="contact-form" novalidate>
-          <h3>Send us a message</h3>
-          <div class="field">
-            <label for="cf-name">Name</label>
-            <input id="cf-name" name="name" type="text" placeholder="Your full name" required />
-          </div>
-          <div class="field">
-            <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" placeholder="you@email.com" required />
-          </div>
-          <div class="field">
-            <label for="cf-phone">Phone</label>
-            <input id="cf-phone" name="phone" type="tel" placeholder="(802) 000-0000" />
-          </div>
-          <div class="field">
-            <label for="cf-msg">How can we help?</label>
-            <textarea id="cf-msg" name="message" placeholder="Tell us a little about your situation or question…" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send message</button>
-          <div class="form-success">Thank you — your message has been received. We'll be in touch soon. ✓</div>
-          <p class="form-note">Demo form — submissions are shown locally and are not sent anywhere.</p>
-        </form>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- ============ FOOTER ============ -->
+  <!-- CTA -->
+  <section class="section tint">
+    <div class="wrap cta-band reveal">
+      <div class="eyebrow-line" style="justify-content:center">Get in touch</div>
+      <h2>How can I find out more?</h2>
+      <p>Our offices are in several locations across Vermont, and we work to identify the perfect match — in providers and location — for those we serve. Please contact us to learn how we might help you stay in the community, or if you're interested in becoming a home care provider.</p>
+      <a href="contact.html" class="btn btn-primary">Contact us
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="footer">
-    <div class="container">
+    <div class="wrap">
       <div class="footer-top">
         <div class="footer-brand">
           <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" />
@@ -417,11 +162,11 @@
         <div>
           <h5>Explore</h5>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#programs" data-open-tab="participants">Participants</a></li>
-            <li><a href="#programs" data-open-tab="providers">Home Care Providers</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="participants.html">Participants</a></li>
+            <li><a href="home-care-providers.html">Home Care Providers</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
         <div>
@@ -430,7 +175,7 @@
             <a href="https://uvs-vt.org" target="_blank" rel="noopener" aria-label="Upper Valley Services"><img src="assets/images/uvs-logo.jpg" alt="Upper Valley Services" /></a>
             <a href="https://lincolnstreetinc.org" target="_blank" rel="noopener" aria-label="Lincoln Street, Inc."><img src="assets/images/lincoln-logo.jpg" alt="Lincoln Street, Inc." /></a>
           </div>
-          <ul style="margin-top:18px">
+          <ul>
             <li><a href="tel:8026625978">802-662-5978</a></li>
             <li><a href="tel:8028861833">802-886-1833</a></li>
           </ul>
