@@ -67,6 +67,39 @@
     });
   }
 
+  /* Vermont map — hover / focus tooltip */
+  const vmap = document.querySelector(".vt-map");
+  if (vmap) {
+    const tip = vmap.querySelector(".vt-tooltip");
+    const tCounty = tip.querySelector(".vt-tt-county");
+    const tOrg = tip.querySelector(".vt-tt-org");
+    vmap.querySelectorAll(".vt-county").forEach((path) => {
+      const show = (e) => {
+        tCounty.textContent = path.dataset.name + " County";
+        tOrg.textContent = path.dataset.org;
+        tip.hidden = false;
+        const rect = vmap.getBoundingClientRect();
+        let x, y;
+        if (e.type === "focus") {
+          const b = path.getBoundingClientRect();
+          x = b.left + b.width / 2 - rect.left;
+          y = b.top - rect.top;
+        } else {
+          x = e.clientX - rect.left;
+          y = e.clientY - rect.top;
+        }
+        tip.style.left = x + "px";
+        tip.style.top = y + "px";
+      };
+      const hide = () => { tip.hidden = true; };
+      path.addEventListener("mouseenter", show);
+      path.addEventListener("mousemove", show);
+      path.addEventListener("mouseleave", hide);
+      path.addEventListener("focus", show);
+      path.addEventListener("blur", hide);
+    });
+  }
+
   /* Footer year */
   const y = document.getElementById("year");
   if (y) y.textContent = new Date().getFullYear();
