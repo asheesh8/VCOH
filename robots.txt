@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# The site editor is not for visitors and should not be indexed.
+Disallow: /admin.html

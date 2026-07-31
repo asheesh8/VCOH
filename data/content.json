@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "updated": "2026-07-31T00:00:00.000Z",
+  "pages": {},
+  "team": [
+    {
+      "id": "uvs",
+      "name": "Upper Valley Services",
+      "logo": "assets/images/uvs-logo.jpg",
+      "url": "https://uvs-vt.org",
+      "urlLabel": "uvs-vt.org",
+      "address": "80 Pearl Street, PO Box 5493, Essex Junction, VT 05452",
+      "phone": "802-662-5978",
+      "tiers": [
+        {
+          "label": "Leadership",
+          "lead": true,
+          "people": [
+            { "name": "Marie Zura", "role": "Program Director" },
+            { "name": "Mukti Subedi", "role": "Associate Director, Multi-Cultural Services" }
+          ]
+        },
+        {
+          "label": "Supervisors",
+          "lead": false,
+          "people": [
+            { "name": "Yam Basnet", "role": "Program Manager Supervisor" },
+            { "name": "John Hooley", "role": "Program Manager Supervisor" },
+            { "name": "Moni Monger", "role": "Program Manager Supervisor" }
+          ]
+        },
+        {
+          "label": "Operations & Quality",
+          "lead": false,
+          "people": [
+            { "name": "Tanya Cusson", "role": "Office Manager" },
+            { "name": "Mary Mougey", "role": "Intake & Outreach Coordinator" },
+            { "name": "Desireah Ladieu", "role": "Quality Manager" }
+          ]
+        },
+        {
+          "label": "Program Managers",
+          "lead": false,
+          "people": [
+            { "name": "Juliane Anderson", "role": "Program Manager" },
+            { "name": "Nirmala Adhikari", "role": "Program Manager" },
+            { "name": "Pampha Champlin", "role": "Program Manager" },
+            { "name": "Som Dahal", "role": "Program Manager" },
+            { "name": "Prasan Mager", "role": "Program Manager" },
+            { "name": "Ivory Racine", "role": "Program Manager" },
+            { "name": "Susmita Mangar", "role": "Program Manager" },
+            { "name": "Ashok Rai", "role": "Program Manager" },
+            { "name": "Budhi Monger", "role": "Program Manager" },
+            { "name": "Gopal Niroula", "role": "Program Manager" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lsi",
+      "name": "Lincoln Street, Inc.",
+      "logo": "assets/images/lincoln-logo.jpg",
+      "url": "https://lincolnstreetinc.org",
+      "urlLabel": "lincolnstreetinc.org",
+      "address": "374 River Street, Springfield, VT 05156",
+      "phone": "802-886-1833",
+      "tiers": [
+        {
+          "label": "Leadership",
+          "lead": true,
+          "people": [
+            { "name": "Heather Hall", "role": "Director" }
+          ]
+        },
+        {
+          "label": "Care Team",
+          "lead": false,
+          "people": [
+            { "name": "Regina Clark", "role": "Nurse Care Coordinator" },
+            { "name": "Caroline Morgan", "role": "Care Coordinator" }
+          ]
+        }
+      ]
+    }
+  ]
+}
