@@ -4,6 +4,8 @@ A modern, immersive redesign of [vtcomfortsofhome.org](https://vtcomfortsofhome.
 
 The redesign keeps the original site's **simple, multi-page structure** (Home / Participants / Home Care Providers / About / Contact — not one long scroll) while refreshing it with the brand colors, an ambient video hero, and cleaner typography.
 
+**Live:** https://vcoh.vercel.app — static HTML/CSS/JS on Vercel, no build step and no environment variables. Editor changes are saved to `data/content.json` (see *Site editor*).
+
 ## Highlights
 
 - **Faithful to the original layout** — centered logo, a green nav bar with the plum active-tab accent, and simple content pages, exactly as before — just modernized.
