@@ -85,6 +85,7 @@
     if (!form || !once(form, "bound")) return;
     const box = form.querySelector(".form-success");
     const btn = form.querySelector('button[type="submit"]');
+    const started = Date.now();
     const say = (msg, ok) => {
       box.textContent = msg;
       box.classList.toggle("is-error", !ok);
@@ -101,6 +102,7 @@
         return;
       }
       data.page = location.pathname;
+      data.started = started;
       data.lang = (window.VCOH && window.VCOH.lang) || "en";
       const label = btn.textContent;
       btn.disabled = true;

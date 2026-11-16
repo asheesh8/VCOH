@@ -102,20 +102,23 @@ English.
 ## Contact form
 
 The form posts to `api/contact.js`, a Vercel function that emails the intake
-team through [Resend](https://resend.com): VCOH.Intake@uvs-vt.org,
-John.hooley@uvs-vt.org, Desireah.Ladieu@uvs-vt.org and Mary.Mougey@uvs-vt.org.
+team through [Brevo](https://www.brevo.com)'s transactional API (free plan:
+300 emails a day): VCOH.Intake@uvs-vt.org, John.hooley@uvs-vt.org,
+Desireah.Ladieu@uvs-vt.org and Mary.Mougey@uvs-vt.org. Reply-to is set to the
+visitor, so staff can just hit Reply. A hidden honeypot field and a
+"submitted in under 3 seconds" check quietly drop bots.
+
 Set these in Vercel → Settings → Environment Variables:
 
 | Variable | Value |
 |----------|-------|
-| `RESEND_API_KEY` | Resend API key |
-| `CONTACT_FROM` | Sender on a Resend-verified domain, e.g. `VCOH Website <website@vtcomfortsofhome.org>` |
-| `CONTACT_DELIVERY_ENABLED` | `true` once a test message arrives |
+| `BREVO_API_KEY` | Brevo API key (SMTP & API → API Keys) |
+| `CONTACT_FROM_EMAIL` | A verified Brevo sender, e.g. `studio@sol-arkitech.com` (authenticate the domain in Brevo for good deliverability) |
+| `CONTACT_FROM_NAME` | Optional, default `VCOH Website` |
 | `CONTACT_TO` | Optional override, comma-separated |
 
-Until delivery is switched on, the form tells visitors their message could not
-be sent and asks them to call 802-662-5978. It never pretends a message went
-through.
+Until the key is set, the form tells visitors their message could not be sent
+and asks them to call 802-662-5978. It never pretends a message went through.
 
 ## SEO
 

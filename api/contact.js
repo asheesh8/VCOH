@@ -1,11 +1,10 @@
-/* Vercel serverless function: contact form → email via Resend.
+/* Vercel serverless function: contact form → email via Brevo (transactional API).
  *
  * Environment variables (Vercel → Project → Settings → Environment Variables):
- *   CONTACT_DELIVERY_ENABLED  "true" to send. Anything else returns 503 and the
- *                             form tells the visitor to call instead.
- *   RESEND_API_KEY            Resend API key.
- *   CONTACT_FROM              Sender on a domain verified in Resend,
- *                             e.g. "VCOH Website <website@vtcomfortsofhome.org>".
+ *   BREVO_API_KEY             Brevo API key (SMTP & API → API Keys). Without it the
+ *                             form returns 503 and tells the visitor to call instead.
+ *   CONTACT_FROM_EMAIL        Verified Brevo sender, e.g. studio@sol-arkitech.com
+ *   CONTACT_FROM_NAME         Optional, default "VCOH Website"
  *   CONTACT_TO                Optional, comma-separated. Defaults to the intake list below.
  *   CONTACT_ALLOWED_ORIGINS   Optional, comma-separated extra origins.
  */
@@ -68,8 +67,11 @@ module.exports = async function handler(req, res) {
 
   const body = await readBody(req);
 
-  /* Honeypot: real visitors never see or fill the "company" field. */
+  /* Spam checks: real visitors never see or fill the "company" field, and
+     nobody types a message in under three seconds. Bots get a quiet "ok". */
   if (clean(body.company, 200)) return res.status(200).json({ ok: true });
+  const started = Number(body.started || 0);
+  if (started && Date.now() - started < 3000) return res.status(200).json({ ok: true });
 
   const name = clean(body.name, LIMITS.name);
   const email = clean(body.email, LIMITS.email);
@@ -84,7 +86,7 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "bad_email" });
   }
 
-  if (process.env.CONTACT_DELIVERY_ENABLED !== "true" || !process.env.RESEND_API_KEY || !process.env.CONTACT_FROM) {
+  if (!process.env.BREVO_API_KEY || !process.env.CONTACT_FROM_EMAIL) {
     return res.status(503).json({ ok: false, error: "delivery_off" });
   }
 
@@ -109,27 +111,28 @@ module.exports = async function handler(req, res) {
   const text = rows.map(([k, v]) => k + ": " + v).join("\n") + "\n\nMessage:\n" + message;
 
   const payload = {
-    from: process.env.CONTACT_FROM,
-    to: recipients,
+    sender: { name: process.env.CONTACT_FROM_NAME || "VCOH Website", email: process.env.CONTACT_FROM_EMAIL },
+    to: recipients.map((email) => ({ email })),
     subject: "Website message from " + name,
-    html,
-    text
+    htmlContent: html,
+    textContent: text,
+    tags: ["vcoh-contact"]
   };
-  if (email) payload.reply_to = email;
+  if (email) payload.replyTo = { email, name };
 
   try {
-    const r = await fetch("https://api.resend.com/emails", {
+    const r = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
-      headers: { Authorization: "Bearer " + process.env.RESEND_API_KEY, "Content-Type": "application/json" },
+      headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(payload)
     });
     if (!r.ok) {
-      console.error("resend_failed", r.status, await r.text());
+      console.error("brevo_failed", r.status, await r.text());
       return res.status(502).json({ ok: false, error: "send_failed" });
     }
     return res.status(200).json({ ok: true });
   } catch (e) {
-    console.error("resend_error", e && e.message);
+    console.error("brevo_error", e && e.message);
     return res.status(502).json({ ok: false, error: "send_failed" });
   }
 };
