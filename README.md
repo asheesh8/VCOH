@@ -90,4 +90,4 @@ Or deploy straight to GitHub Pages / Netlify / Vercel — it's a static site wit
 
 - Fonts (Fraunces + Lato) load from Google Fonts, so viewing needs an internet connection. They can be self-hosted for a fully offline build.
 - The contact form is a front-end demo — it shows a success message but does not send anything yet.
-- The hero video is the original 4K source (~21 MB). For production it's worth compressing to ~1080p and generating a matching poster frame.
+- The hero video (`assets/video/hero.mp4`) is a 1080p, muted, ~1.7 MB encode of the original 4K clip, with a matching poster frame in `assets/images/hero-poster.jpg`. The 4K source is still in git history (commit 03e50ca) if it is ever needed.
