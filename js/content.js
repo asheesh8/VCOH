@@ -9,7 +9,6 @@
   var DRAFT_KEY = "vcoh:draft";
   var PREVIEW_KEY = "vcoh:preview";
   var LANG_KEY = "vcoh:lang";
-  var SB = window.VCOH_SUPABASE || {};
 
   var params = new URLSearchParams(location.search);
   var EDIT = params.get("vcohedit") === "1";
@@ -417,7 +416,7 @@
     previewBanner();
     if (EDIT) {
       var s = document.createElement("script");
-      s.src = "js/editor.js?v=20261116";
+      s.src = "js/editor.js?v=20261117";
       document.body.appendChild(s);
     }
   }
@@ -434,24 +433,6 @@
       .catch(function () { return null; });
   }
 
-  /* Live content from Supabase when it is set up; the bundled file is the
-     fallback if Supabase is unreachable or nothing has been saved yet. */
-  function fromSupabase() {
-    var url = String(SB.url || "").replace(/\/+$/, "");
-    if (!url || !SB.anonKey) return Promise.resolve(null);
-    var ctl = window.AbortController ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
-    return fetch(url + "/rest/v1/site_content?id=eq.live&select=data", {
-      headers: { apikey: SB.anonKey, Authorization: "Bearer " + SB.anonKey, Accept: "application/json" },
-      cache: "no-store",
-      signal: ctl ? ctl.signal : undefined
-    })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (rows) { return rows && rows[0] && rows[0].data ? rows[0].data : null; })
-      .catch(function () { return null; })
-      .then(function (d) { clearTimeout(timer); return d; });
-  }
-
   function boot() {
     /* Translate the static page straight away so Nepali visitors do not
        see English first; saved content is laid over it when it arrives. */
@@ -459,9 +440,7 @@
     document.documentElement.classList.remove("lang-pending");
     var d = PREVIEW ? draft() : null;
     if (d) return apply(d);
-    fromSupabase()
-      .then(function (live) { return live || fromFile(); })
-      .then(apply);
+    fromFile().then(apply);
   }
 
   window.VCOH = {

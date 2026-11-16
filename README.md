@@ -4,7 +4,7 @@ A modern, immersive redesign of [vtcomfortsofhome.org](https://vtcomfortsofhome.
 
 The redesign keeps the original site's **simple, multi-page structure** (Home / Participants / Home Care Providers / About / Contact — not one long scroll) while refreshing it with the brand colors, an ambient video hero, and cleaner typography.
 
-**Live:** https://www.vtcomfortsofhome.org (also https://vcoh.vercel.app). It's static HTML/CSS/JS on Vercel with no build step, one serverless function for the contact form, and Supabase for content edited in the site editor.
+**Live:** https://www.vtcomfortsofhome.org (also https://vcoh.vercel.app). It's static HTML/CSS/JS on Vercel with no build step, and two small serverless functions, one for the contact form and one for the site editor, which saves edits to this repo.
 
 ## Highlights
 
@@ -14,7 +14,7 @@ The redesign keeps the original site's **simple, multi-page structure** (Home / 
 - **All original content preserved** — every page, all copy, photos, staff names, office details, partner logos, and the "Across the Fence" YouTube segment (loaded via a click-to-play thumbnail so the page stays fast).
 - **Fully responsive** — mobile menu, fluid type, and layout down to small screens.
 - **English and Nepali** — every page in both languages, switchable from the header.
-- **Edit, save, live** — a passcode-protected visual editor backed by Supabase.
+- **Edit, save, live** — a passcode-protected visual editor that publishes straight from the browser.
 - **Nice touches** — subtle scroll-reveal animations and a working contact form.
 
 ## Pages
@@ -47,43 +47,41 @@ editing. The **Staff** tab manages the About-page team, with optional Nepali
 group names and job titles.
 
 **Saving:** edits stay in the browser until you press **Save & publish** (or
-Cmd/Ctrl+S). That writes them to Supabase, and every visitor sees them
-straight away. Every save also keeps the previous version in
-`site_content_history`.
+Cmd/Ctrl+S). That commits them to this GitHub repo through a Vercel function,
+and Vercel redeploys the site, so it's live for every visitor in about a
+minute. Every save is a git commit, so any earlier version can be restored.
 
 ### How content is stored
 
-- Every page loads `js/content.js`. It fetches the `live` row from the
-  Supabase table `site_content` (public read) and lays it over the static
+- All page edits and the staff list live in `data/content.json`. English edits
+  go in `pages`, Nepali edits in `ne.pages`, and staff in `team`.
+- Every page loads `js/content.js`, which lays that file over the static
   markup. The HTML files are never rewritten, so the original copy is always
   the fallback.
-- If Supabase is not configured, can't be reached, or is empty, the site uses
-  `data/content.json` instead. While `js/supabase-config.js` is blank, the
-  editor still works, but publishing means exporting `content.json` and
-  redeploying.
-- English edits go in `pages`, Nepali edits in `ne.pages`, and staff in `team`.
-- Photos uploaded in the editor go to the public Supabase Storage bucket
-  `site-media`.
+- Photos uploaded in the editor are committed to `assets/uploads/`.
+- `api/editor.js` checks the passcode, issues a 12-hour signed session, and
+  writes to GitHub with a server-side token. Neither the passcode nor the
+  token is ever sent to the browser. If two people publish at the same time,
+  the second one is told to reload instead of overwriting the first.
 
-### Setting up Supabase (one time)
+### Setting up online saving (one time)
 
-1. Create a project at supabase.com.
-2. In **SQL Editor**, paste and run `supabase/setup.sql`. Before you run it,
-   replace `REPLACE-WITH-EDITOR-EMAIL@example.org` at the bottom with the
-   editor login email.
-3. Go to **Authentication → Users → Add user → Create new user**. Enter that
-   email, use the editor passcode as the password, and tick *Auto Confirm User*.
-4. In **Authentication → Sign In / Providers**, turn off *Allow new users to
-   sign up*.
-5. In **Project Settings → API**, copy the Project URL and the `anon` public
-   key into `js/supabase-config.js`, along with the editor email. Commit and
-   deploy.
-6. Open the editor, sign in, and press **Save & publish** once. That copies
-   the current content into Supabase.
+1. **Create a GitHub token:** go to GitHub → Settings → Developer settings →
+   Fine-grained tokens → Generate new token.
+   - Repository access: *Only select repositories* → `asheesh8/VCOH`.
+   - Permissions: *Contents* → **Read and write**.
+   - Expiration: the longest allowed. Set a reminder to renew it.
+2. **Add environment variables in Vercel** (vcoh → Settings → Environment
+   Variables → Production):
+   - `GITHUB_TOKEN`: the token from step 1.
+   - `EDITOR_PASSCODE`: the editor passcode.
+3. **Redeploy** (Deployments → ⋯ → Redeploy) so the function picks up the
+   variables.
 
-Row Level Security only lets emails listed in `site_editors` write, so the
-public anon key in the page source can't change anything. To change the
-passcode, change that user's password in Supabase.
+While these aren't set (or when you run the site from a plain local server),
+the editor still opens with the passcode, but publishing falls back to
+downloading `content.json`. To change the passcode, change `EDITOR_PASSCODE`
+and redeploy. That also signs everyone out.
 
 ## Nepali
 
@@ -139,9 +137,9 @@ through.
 ├── admin.html            # Site editor (triple-click the footer logo/banner)
 ├── 404.html / sitemap.xml / robots.txt / llms.txt / vercel.json
 ├── api/contact.js        # Contact form → email (Vercel function)
-├── supabase/setup.sql    # Tables, security rules and storage for the editor
+├── api/editor.js         # Site editor sign-in, save and photo upload (commits to GitHub)
 ├── scripts/              # Nepali translation table + generator
-├── data/content.json     # Fallback content when Supabase is unavailable
+├── data/content.json     # Everything edited in the site editor
 ├── css/
 │   ├── styles.css        # Design system + all styles
 │   └── admin.css         # Site editor chrome
@@ -149,8 +147,7 @@ through.
 │   ├── main.js           # Shared: mobile nav, video, reveal, video facade, form
 │   ├── content.js        # Applies saved content + Nepali over the pages (all pages)
 │   ├── i18n-ne.js        # Generated Nepali translation table
-│   ├── supabase-config.js# Supabase URL / anon key / editor email
-│   ├── backend.js        # Editor sign-in, save and photo upload (Supabase REST)
+│   ├── backend.js        # Editor's client for api/editor.js
 │   ├── editor.js         # In-page click-to-edit (loads only inside the editor)
 │   └── admin.js          # The editor app itself
 └── assets/

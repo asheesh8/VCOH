@@ -501,17 +501,20 @@
       place(panel, img);
     };
 
-    /* With Supabase set up, photos go to storage and only their address is
+    /* When online saving is set up, photos are committed with the site and only their address is
        saved. Without it they are embedded in the content, so keep them small. */
     var backend = null;
     try { backend = parent.VCOHBackend && parent.VCOHBackend.configured ? parent.VCOHBackend : null; } catch (e) {}
     if (backend) {
-      if (f.size > 8 * 1024 * 1024) {
-        alert("That image is " + Math.round(f.size / 1024 / 1024) + " MB. Please use one under 8 MB.");
-        return;
-      }
       if (field) field.value = "Uploading…";
-      backend.upload(f).then(function (url) { useFile(url); }, function (err) {
+      backend.upload(f).then(function (path) {
+        /* Show the photo straight away; the saved address works on the live
+           site once it redeploys. */
+        img.setAttribute("src", URL.createObjectURL(f));
+        recordAttrs(img, { src: path });
+        if (field) field.value = path;
+        place(panel, img);
+      }, function (err) {
         if (field) field.value = img.getAttribute("src") || "";
         alert("The photo could not be uploaded. " + (err && err.message ? err.message : ""));
       });
@@ -584,7 +587,7 @@
         var live = false;
         try { live = !!(parent.VCOHBackend && parent.VCOHBackend.configured); } catch (e) {}
         return live
-          ? '<p class="hint">Photos up to 8&nbsp;MB are uploaded and stored online.</p>'
+          ? '<p class="hint">Photos up to 3&nbsp;MB are uploaded with the site. They show on the live site after you publish.</p>'
           : '<p class="hint">Photos are stored inside the site content, so keep them under about 500&nbsp;KB.</p>';
       })() +
       "</div>";

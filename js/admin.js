@@ -1,6 +1,6 @@
 /* Vermont Comforts of Home — site editor.
-   Edits a draft copy of the site content in the browser. With Supabase set
-   up, "Save & publish" writes it live; otherwise it is exported as
+   Edits a draft copy of the site content in the browser. When online saving
+   is set up (api/editor.js), "Save & publish" commits it to GitHub; otherwise it is exported as
    data/content.json. Page text is edited inside the preview frame by
    js/editor.js; staff are edited here. */
 (function () {
@@ -9,7 +9,7 @@
   var DATA_URL = "data/content.json";
   var DRAFT_KEY = "vcoh:draft";
   var B = window.VCOHBackend;
-  var LIVE = !!(B && B.configured);   /* Save & publish writes to Supabase */
+  var LIVE = false;                   /* Save & publish commits to GitHub (set at sign-in) */
   var lang = "en";                    /* language being edited in the frame */
   var liveInfo = null;                /* { updated_at, updated_by } of the live row */
 
@@ -39,7 +39,7 @@
     changes: $("#changes"), badge: $("#tabbadge"), pagenav: $("#pagenav"),
     langs: $("#langs"), publish: $("#gopublish"), lastsaved: $("#lastsaved")
   };
-  document.body.classList.add(LIVE ? "live" : "file");
+  document.body.classList.add("file");
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -189,7 +189,7 @@
 
     if (loadError) {
       els.status.classList.add("dirty");
-      txt.textContent = LIVE ? "Could not reach Supabase" : "Could not load content.json";
+      txt.textContent = LIVE ? "Could not load the saved content" : "Could not load content.json";
       dot.style.background = "#d8564f";
     } else if (total) {
       els.status.classList.add("dirty");
@@ -503,6 +503,16 @@
 
   var saving = false;
 
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "ad-toast";
+    t.setAttribute("role", "status");
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add("out"); }, 4200);
+    setTimeout(function () { t.remove(); }, 4800);
+  }
+
   function setPublishLabel(text) {
     var l = $(".lbl", els.publish);
     if (l) l.textContent = text;
@@ -528,11 +538,16 @@
         saving = false;
         setPublishLabel("Published ✓");
         setTimeout(function () { setPublishLabel("Save & publish"); }, 2600);
+        toast("Published. The live site updates in about a minute.");
         refresh();
       }, function (err) {
         saving = false;
         setPublishLabel("Save & publish");
         refresh();
+        if (err && err.status === 409) {
+          alert(err.message);
+          return;
+        }
         if (err && err.status === 401) {
           alert("Your sign-in has expired. Your edits are safe in this browser — sign in again, then press Save & publish.");
           lock();
@@ -648,7 +663,7 @@
         els.changes.insertAdjacentHTML("afterbegin",
           '<div class="change"><span class="k">Heads up</span><span class="v">' +
           (LIVE
-            ? "The saved content could not be loaded from Supabase. Check your connection, then reload this page before publishing."
+            ? "The saved content could not be loaded. Check your connection, then reload this page before publishing."
             : "data/content.json could not be loaded. If you opened this file directly from your computer, " +
               "run it through a web server instead (or use the deployed site).") +
           "</span></div>");
@@ -676,6 +691,9 @@
     btn.textContent = "Checking…";
     B.signIn(pc.value).then(function () {
       pc.value = "";
+      LIVE = !!B.configured;
+      document.body.classList.toggle("live", LIVE);
+      document.body.classList.toggle("file", !LIVE);
       unlock();
     }, function (x) {
       err.textContent = x && x.message ? x.message : "Could not sign in.";
@@ -696,6 +714,11 @@
   if (!B) {
     $("#lockerr").textContent = "The editor could not start (js/backend.js is missing).";
   } else {
-    B.session().then(function (s) { if (s) unlock(); else lock(); });
+    B.session().then(function (s) {
+      LIVE = !!B.configured;
+      document.body.classList.toggle("live", LIVE);
+      document.body.classList.toggle("file", !LIVE);
+      if (s) unlock(); else lock();
+    });
   }
 })();
