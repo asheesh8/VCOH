@@ -76,17 +76,52 @@
     });
   }
 
-  /* Contact form (demo only) */
+  /* Contact form — posts to /api/contact (Vercel function), which emails
+     the intake team. */
+  function t(s) { return window.VCOH && window.VCOH.t ? window.VCOH.t(s) : s; }
+
   function contactForm() {
     const form = document.getElementById("contact-form");
     if (!form || !once(form, "bound")) return;
+    const box = form.querySelector(".form-success");
+    const btn = form.querySelector('button[type="submit"]');
+    const say = (msg, ok) => {
+      box.textContent = msg;
+      box.classList.toggle("is-error", !ok);
+      box.style.display = "block";
+      box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const ok = form.querySelector(".form-success");
-      ok.style.display = "block";
-      form.querySelectorAll("input, textarea").forEach((f) => (f.value = ""));
-      ok.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      setTimeout(() => (ok.style.display = "none"), 6000);
+      if (EDITING) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      Object.keys(data).forEach((k) => (data[k] = String(data[k]).trim()));
+      if (!data.name || !data.message || (!data.email && !data.phone)) {
+        say(t("Please fill in your name, and an email or phone number so we can reply."), false);
+        return;
+      }
+      data.page = location.pathname;
+      data.lang = (window.VCOH && window.VCOH.lang) || "en";
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = t("Sending…");
+      fetch(form.getAttribute("action") || "/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then((r) => {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          form.reset();
+          say(t("Thank you — your message has been sent. We'll be in touch soon."), true);
+        })
+        .catch(() => {
+          say(t("Sorry, your message could not be sent. Please call us at 802-662-5978."), false);
+        })
+        .then(() => {
+          btn.disabled = false;
+          btn.textContent = label;
+        });
     });
   }
 
@@ -101,8 +136,8 @@
     vmap.querySelectorAll(".vt-county").forEach((path) => {
       if (!once(path, "bound")) return;
       const show = (e) => {
-        tCounty.textContent = path.dataset.name + " County";
-        tOrg.textContent = path.dataset.org;
+        tCounty.textContent = path.dataset.name + " " + t("County");
+        tOrg.textContent = t(path.dataset.org);
         tip.hidden = false;
         const rect = vmap.getBoundingClientRect();
         let x, y;
@@ -132,8 +167,8 @@
     if (y) y.textContent = new Date().getFullYear();
   }
 
-  /* Site editor: triple-click the footer brand. Deliberately undocumented —
-     there is no password, so the gesture is the only thing keeping it quiet. */
+  /* Site editor: triple-click the footer brand. The editor itself asks for
+     the passcode. */
   function adminTrigger() {
     if (EDITING) return;
     const brand = document.querySelector(".footer .footer-brand");

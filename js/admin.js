@@ -1,12 +1,17 @@
 /* Vermont Comforts of Home — site editor.
-   Edits a draft copy of data/content.json in the browser, then hands it back
-   as a file to publish. Page text is edited inside the preview frame by
+   Edits a draft copy of the site content in the browser. With Supabase set
+   up, "Save & publish" writes it live; otherwise it is exported as
+   data/content.json. Page text is edited inside the preview frame by
    js/editor.js; staff are edited here. */
 (function () {
   "use strict";
 
   var DATA_URL = "data/content.json";
   var DRAFT_KEY = "vcoh:draft";
+  var B = window.VCOHBackend;
+  var LIVE = !!(B && B.configured);   /* Save & publish writes to Supabase */
+  var lang = "en";                    /* language being edited in the frame */
+  var liveInfo = null;                /* { updated_at, updated_by } of the live row */
 
   var PAGES = [
     { file: "index.html", name: "Home" },
@@ -31,8 +36,10 @@
   var els = {
     status: $("#status"), tabs: $("#tabs"), pagelist: $("#pagelist"), pagesel: $("#pagesel"),
     frame: $("#frame"), stage: $("#stage"), widths: $("#widths"), teamlist: $("#teamlist"),
-    changes: $("#changes"), badge: $("#tabbadge"), pagenav: $("#pagenav")
+    changes: $("#changes"), badge: $("#tabbadge"), pagenav: $("#pagenav"),
+    langs: $("#langs"), publish: $("#gopublish"), lastsaved: $("#lastsaved")
   };
+  document.body.classList.add(LIVE ? "live" : "file");
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -44,6 +51,13 @@
     var w = String(name || "").trim().split(/\s+/).filter(Boolean);
     if (!w.length) return "?";
     return ((w[0][0] || "") + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
+  }
+
+  /* Automatic Nepali for a staff label/title, shown as the placeholder. */
+  function autoNe(en, fallback) {
+    var d = window.VCOH_NE || {};
+    var k = esc(String(en || "").replace(/\s+/g, " ").trim());
+    return Object.prototype.hasOwnProperty.call(d, k) ? d[k].replace(/&amp;/g, "&") : fallback;
   }
 
   var ICON = {
@@ -130,11 +144,16 @@
     }, 0);
   }
 
-  function pageEdits(file) {
-    var a = (working().pages || {})[file];
-    a = (a && a.sections) || {};
-    var b = ((published || {}).pages || {})[file];
-    b = (b && b.sections) || {};
+  function sectionsOf(doc, l, file) {
+    var root = l === "ne" ? (doc || {}).ne : doc;
+    var p = ((root || {}).pages || {})[file];
+    return (p && p.sections) || {};
+  }
+
+  function pageEdits(file, onlyLang) {
+    if (!onlyLang) return pageEdits(file, "en") + pageEdits(file, "ne");
+    var a = sectionsOf(working(), onlyLang, file);
+    var b = sectionsOf(published, onlyLang, file);
     var n = 0;
     Object.keys(a).forEach(function (k) { if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) n++; });
     Object.keys(b).forEach(function (k) { if (!(k in a)) n++; });
@@ -144,8 +163,13 @@
   function changeList() {
     var out = [];
     PAGES.forEach(function (p) {
-      var n = pageEdits(p.file);
-      if (n) out.push({ k: p.name, v: n === 1 ? "1 block edited" : n + " blocks edited", n: n });
+      ["en", "ne"].forEach(function (l) {
+        var n = pageEdits(p.file, l);
+        if (n) out.push({
+          k: p.name + (l === "ne" ? " · नेपाली" : ""),
+          v: n === 1 ? "1 block edited" : n + " blocks edited", n: n
+        });
+      });
     });
     var a = working().team || [], b = (published || {}).team || [];
     if (JSON.stringify(a) !== JSON.stringify(b)) {
@@ -165,28 +189,38 @@
 
     if (loadError) {
       els.status.classList.add("dirty");
-      txt.textContent = "Could not load content.json";
+      txt.textContent = LIVE ? "Could not reach Supabase" : "Could not load content.json";
       dot.style.background = "#d8564f";
     } else if (total) {
       els.status.classList.add("dirty");
-      txt.textContent = total === 1 ? "1 unpublished change" : total + " unpublished changes";
+      txt.textContent = total === 1 ? "1 unsaved change" : total + " unsaved changes";
       dot.style.background = "";
     } else {
       els.status.classList.remove("dirty");
-      txt.textContent = "Everything is published";
+      txt.textContent = LIVE ? "Everything is live" : "Everything is published";
       dot.style.background = "";
     }
 
     els.badge.hidden = !total;
     els.badge.textContent = total;
     $("#discard").disabled = !draft;
+    if (LIVE) {
+      els.publish.disabled = !total || saving;
+      $("#publishnow").disabled = !total || saving;
+    }
+    if (els.lastsaved) {
+      els.lastsaved.textContent = liveInfo && liveInfo.updated_at
+        ? "Last published " + new Date(liveInfo.updated_at).toLocaleString() +
+          (liveInfo.updated_by ? " by " + liveInfo.updated_by : "")
+        : "";
+    }
 
     els.changes.innerHTML = list.length
       ? list.map(function (c) {
           return '<div class="change"><span class="k">' + esc(c.k) + '</span>' +
             '<span class="v">' + esc(c.v) + '</span><span class="n">' + esc(c.n) + "</span></div>";
         }).join("")
-      : '<p class="empty">No unpublished changes — the live site matches what you see here.</p>';
+      : '<p class="empty">No unsaved changes — the live site matches what you see here.</p>';
 
     $$(".ad-pages button").forEach(function (b) {
       var n = pageEdits(b.dataset.page);
@@ -216,7 +250,7 @@
   function reloadFrame() {
     frameStale = false;
     els.pagesel.value = current;
-    els.frame.src = current + "?vcohedit=1&t=" + Date.now();
+    els.frame.src = current + "?vcohedit=1&lang=" + lang + "&t=" + Date.now();
   }
 
   function goToPage(file) {
@@ -233,6 +267,16 @@
     if (b) { showTab("pages"); goToPage(b.dataset.page); }
   });
   els.pagesel.addEventListener("change", function () { goToPage(els.pagesel.value); });
+
+  els.langs.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-lang]");
+    if (!b || b.dataset.lang === lang) return;
+    try { els.frame.contentWindow.postMessage({ source: "vcoh-admin", type: "blur" }, location.origin); } catch (err) {}
+    lang = b.dataset.lang;
+    $$("button", els.langs).forEach(function (x) { x.classList.toggle("on", x === b); });
+    $("#viewsite").href = "index.html?preview=1&lang=" + lang;
+    setTimeout(reloadFrame, 30);
+  });
 
   els.widths.addEventListener("click", function (e) {
     var b = e.target.closest("button[data-w]");
@@ -257,7 +301,10 @@
     var b = e.target.closest("button[data-tab]");
     if (b) showTab(b.dataset.tab);
   });
-  $("#gopublish").addEventListener("click", function () { showTab("publish"); });
+  els.publish.addEventListener("click", function () {
+    if (LIVE) publishNow();
+    else showTab("publish");
+  });
 
   /* =========================================================
      Staff editor
@@ -267,6 +314,7 @@
       '<span class="av">' + esc(initials(p.name)) + "</span>" +
       '<input type="text" class="nm" data-field="name" value="' + esc(p.name || "") + '" placeholder="Full name" />' +
       '<input type="text" data-field="role" value="' + esc(p.role || "") + '" placeholder="Job title" />' +
+      '<input type="text" class="ne" lang="ne" data-field="role_ne" value="' + esc(p.role_ne || "") + '" placeholder="' + esc(autoNe(p.role, "पद (नेपाली)")) + '" title="Job title in Nepali — leave empty to use the automatic translation shown" />' +
       '<button type="button" class="icon-btn" data-act="pup" title="Move up">' + ICON.up + "</button>" +
       '<button type="button" class="icon-btn" data-act="pdown" title="Move down">' + ICON.down + "</button>" +
       '<button type="button" class="icon-btn rm" data-act="pdel" title="Remove">' + ICON.x + "</button>" +
@@ -277,6 +325,7 @@
     return '<div class="tier-box" data-org="' + o + '" data-tier="' + t + '">' +
       '<div class="tier-top">' +
         '<input type="text" data-field="label" value="' + esc(tier.label || "") + '" placeholder="Group name (e.g. Supervisors)" />' +
+        '<input type="text" class="ne" lang="ne" data-field="label_ne" value="' + esc(tier.label_ne || "") + '" placeholder="' + esc(autoNe(tier.label, "समूह (नेपाली)")) + '" title="Group name in Nepali — leave empty to use the automatic translation shown" />' +
         '<label class="chk"><input type="checkbox" data-field="lead"' + (tier.lead ? " checked" : "") + " /> Highlight</label>" +
         '<button type="button" class="icon-btn" data-act="tup" title="Move group up">' + ICON.up + "</button>" +
         '<button type="button" class="icon-btn" data-act="tdown" title="Move group down">' + ICON.down + "</button>" +
@@ -349,7 +398,7 @@
       c.tier.people[c.i][f] = e.target.value;
       var av = $(".av", e.target.closest(".prow"));
       if (f === "name" && av) av.textContent = initials(e.target.value);
-    } else if (c.tier && (f === "label" || f === "lead")) {
+    } else if (c.tier && (f === "label" || f === "label_ne" || f === "lead")) {
       c.tier[f] = f === "lead" ? e.target.checked : e.target.value;
     } else if (c.org) {
       c.org[f] = e.target.value;
@@ -439,7 +488,7 @@
     return JSON.stringify(doc, null, 2);
   }
 
-  $("#download").addEventListener("click", function () {
+  function download() {
     var blob = new Blob([payload()], { type: "application/json" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -449,6 +498,59 @@
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+  $$("[data-download]").forEach(function (b) { b.addEventListener("click", download); });
+
+  var saving = false;
+
+  function setPublishLabel(text) {
+    var l = $(".lbl", els.publish);
+    if (l) l.textContent = text;
+  }
+
+  function publishNow() {
+    flush();
+    if (!LIVE || saving || !changeList().length) return;
+    /* Make sure the preview frame has written its last keystrokes. */
+    try { els.frame.contentWindow.postMessage({ source: "vcoh-admin", type: "blur" }, location.origin); } catch (e) {}
+    saving = true;
+    setPublishLabel("Saving…");
+    refresh();
+    setTimeout(function () {
+      if (!dirtyLocal) readDraft();
+      var doc = JSON.parse(payload());
+      B.saveLive(doc).then(function (row) {
+        published = doc;
+        liveInfo = row ? { updated_at: row.updated_at, updated_by: row.updated_by } : { updated_at: new Date().toISOString() };
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        draft = null;
+        dirtyLocal = false;
+        saving = false;
+        setPublishLabel("Published ✓");
+        setTimeout(function () { setPublishLabel("Save & publish"); }, 2600);
+        refresh();
+      }, function (err) {
+        saving = false;
+        setPublishLabel("Save & publish");
+        refresh();
+        if (err && err.status === 401) {
+          alert("Your sign-in has expired. Your edits are safe in this browser — sign in again, then press Save & publish.");
+          lock();
+          return;
+        }
+        alert("Could not publish: " + (err && err.message ? err.message : "unknown error") +
+          "\n\nYour edits are still saved in this browser. Try again in a moment.");
+      });
+    }, 120);
+  }
+  $("#publishnow").addEventListener("click", publishNow);
+
+  /* Cmd/Ctrl+S publishes */
+  addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      if (LIVE) publishNow();
+    }
   });
 
   $("#copy").addEventListener("click", function () {
@@ -471,7 +573,7 @@
 
   $("#discard").addEventListener("click", function () {
     if (!draft) return;
-    if (confirm("Throw away every unpublished change and go back to what is live?")) dropDraft();
+    if (confirm("Throw away every unsaved change and go back to what is live?")) dropDraft();
   });
 
   $("#clear").addEventListener("click", function () {
@@ -485,6 +587,7 @@
     if (e.origin !== location.origin || !e.data || e.data.source !== "vcoh-editor") return;
     if (e.data.type === "change") { if (!dirtyLocal) readDraft(); refresh(); }
     if (e.data.type === "team-click") { showTab("team"); }
+    if (e.data.type === "save" && LIVE) { publishNow(); }
   });
 
   /* Another tab (or the frame) touched the draft */
@@ -499,12 +602,26 @@
   /* =========================================================
      Boot
      ========================================================= */
+  function fromFile() {
+    return fetch(DATA_URL, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("http " + r.status);
+      return r.json();
+    });
+  }
+
   function load() {
-    return fetch(DATA_URL, { cache: "no-store" })
-      .then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
-        return r.json();
-      })
+    var src = LIVE
+      ? B.loadLive().then(function (row) {
+          if (row && row.data) {
+            liveInfo = { updated_at: row.updated_at, updated_by: row.updated_by };
+            return row.data;
+          }
+          /* Nothing saved online yet — start from the bundled file. */
+          liveInfo = null;
+          return fromFile();
+        })
+      : fromFile();
+    return src
       .then(function (json) {
         published = json;
         loadError = false;
@@ -519,15 +636,66 @@
       });
   }
 
-  renderPageList();
-  load().then(function () {
-    renderTeam();
-    reloadFrame();
-    if (loadError) {
-      els.changes.insertAdjacentHTML("afterbegin",
-        '<div class="change"><span class="k">Heads up</span><span class="v">' +
-        "data/content.json could not be loaded. If you opened this file directly from your computer, " +
-        "run it through a web server instead (or use the deployed site).</span></div>");
-    }
+  var started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    renderPageList();
+    load().then(function () {
+      renderTeam();
+      reloadFrame();
+      if (loadError) {
+        els.changes.insertAdjacentHTML("afterbegin",
+          '<div class="change"><span class="k">Heads up</span><span class="v">' +
+          (LIVE
+            ? "The saved content could not be loaded from Supabase. Check your connection, then reload this page before publishing."
+            : "data/content.json could not be loaded. If you opened this file directly from your computer, " +
+              "run it through a web server instead (or use the deployed site).") +
+          "</span></div>");
+      }
+    });
+  }
+
+  /* ---------- sign in ---------- */
+  function unlock() {
+    document.body.classList.remove("locked");
+    start();
+  }
+
+  function lock() {
+    document.body.classList.add("locked");
+    var pc = $("#passcode");
+    if (pc) { pc.value = ""; setTimeout(function () { pc.focus(); }, 50); }
+  }
+
+  $("#lockform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pc = $("#passcode"), err = $("#lockerr"), btn = $("#unlock");
+    err.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "Checking…";
+    B.signIn(pc.value).then(function () {
+      pc.value = "";
+      unlock();
+    }, function (x) {
+      err.textContent = x && x.message ? x.message : "Could not sign in.";
+      pc.select();
+    }).then(function () {
+      btn.disabled = false;
+      btn.textContent = "Sign in";
+    });
   });
+
+  $("#signout").addEventListener("click", function () {
+    flush();
+    if (changeList().length && !confirm("You have unsaved changes. They stay in this browser, but nobody else will see them until you publish.\n\nSign out anyway?")) return;
+    B.signOut();
+    lock();
+  });
+
+  if (!B) {
+    $("#lockerr").textContent = "The editor could not start (js/backend.js is missing).";
+  } else {
+    B.session().then(function (s) { if (s) unlock(); else lock(); });
+  }
 })();

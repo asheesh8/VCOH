@@ -3,19 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact — Vermont Comforts of Home</title>
-  <meta name="description" content="Contact Vermont Comforts of Home. Offices in Essex Junction and Springfield, Vermont. Call 802-662-5978." />
-  <link rel="icon" href="assets/images/logo.jpg" />
+  <title>Contact Us | Vermont Comforts of Home — Essex Junction &amp; Springfield, VT</title>
+  <meta name="description" content="Contact Vermont Comforts of Home. Offices in Essex Junction (802-662-5978) and Springfield (802-886-1833), Vermont. Send us a message online." />
+  <link rel="canonical" href="https://www.vtcomfortsofhome.org/contact.html" />
+  <link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/contact.html" />
+  <link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/contact.html" />
+  <link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/contact.html" />
+  <meta name="theme-color" content="#517e02" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Vermont Comforts of Home" />
+  <meta property="og:title" content="Contact Us | Vermont Comforts of Home — Essex Junction &amp; Springfield, VT" />
+  <meta property="og:description" content="Contact Vermont Comforts of Home. Offices in Essex Junction (802-662-5978) and Springfield (802-886-1833), Vermont. Send us a message online." />
+  <meta property="og:url" content="https://www.vtcomfortsofhome.org/contact.html" />
+  <meta property="og:image" content="https://www.vtcomfortsofhome.org/assets/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Vermont Comforts of Home" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ne_NP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Contact Us | Vermont Comforts of Home — Essex Junction &amp; Springfield, VT" />
+  <meta name="twitter:description" content="Contact Vermont Comforts of Home. Offices in Essex Junction (802-662-5978) and Springfield (802-886-1833), Vermont. Send us a message online." />
+  <meta name="twitter:image" content="https://www.vtcomfortsofhome.org/assets/images/og-image.jpg" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/images/favicon-48.png" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <script>try{var l=/^\/ne(\/|$)/.test(location.pathname)?"ne":new URLSearchParams(location.search).get("lang")||localStorage.getItem("vcoh:lang");if(l==="ne")document.documentElement.classList.add("lang-pending","lang-ne")}catch(e){}setTimeout(function(){document.documentElement.classList.remove("lang-pending")},2500)</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=20261116" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.vtcomfortsofhome.org/"}, {"@type": "ListItem", "position": 2, "name": "Contact", "item": "https://www.vtcomfortsofhome.org/contact.html"}]}</script>
 </head>
 <body>
 
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Vermont Comforts of Home — Home">
-      <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" />
+      <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" width="1250" height="480" fetchpriority="high" />
     </a>
   </header>
   <nav class="mainnav" aria-label="Main navigation">
@@ -66,27 +89,31 @@
           </div>
         </div>
 
-        <form class="contact-form reveal" id="contact-form" novalidate>
+        <form class="contact-form reveal" id="contact-form" action="/api/contact" method="post" novalidate>
           <h3 style="margin-bottom:.6em">Send us a message</h3>
           <div class="field">
             <label for="cf-name">Name</label>
-            <input id="cf-name" name="name" type="text" placeholder="Your full name" required />
+            <input id="cf-name" name="name" type="text" placeholder="Your full name" autocomplete="name" maxlength="120" required />
           </div>
           <div class="field">
             <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" placeholder="you@email.com" required />
+            <input id="cf-email" name="email" type="email" placeholder="you@email.com" autocomplete="email" maxlength="200" />
           </div>
           <div class="field">
             <label for="cf-phone">Phone</label>
-            <input id="cf-phone" name="phone" type="tel" placeholder="(802) 000-0000" />
+            <input id="cf-phone" name="phone" type="tel" placeholder="(802) 000-0000" autocomplete="tel" maxlength="40" />
           </div>
           <div class="field">
             <label for="cf-msg">How can we help?</label>
-            <textarea id="cf-msg" name="message" placeholder="Tell us a little about your situation or question…" required></textarea>
+            <textarea id="cf-msg" name="message" placeholder="Tell us a little about your situation or question…" maxlength="5000" required></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send message</button>
-          <div class="form-success">Thank you — your message has been received. We'll be in touch soon. ✓</div>
-          <p class="form-note">Demo form — submissions are shown locally and are not sent anywhere.</p>
+          <div class="hp-field" aria-hidden="true">
+            <label for="cf-company">Company</label>
+            <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="form-success" role="status" aria-live="polite"></div>
+          <p class="form-note">Your message goes straight to the Vermont Comforts of Home intake team.</p>
         </form>
       </div>
     </div>
@@ -97,7 +124,7 @@
     <div class="wrap">
       <div class="footer-top">
         <div class="footer-brand">
-          <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" />
+          <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" width="1250" height="480" loading="lazy" decoding="async" />
           <p>A non-profit program helping Vermonters live with dignity and choice — surrounded by familiar places and people who care.</p>
         </div>
         <div>
@@ -113,8 +140,8 @@
         <div>
           <h5>In collaboration with</h5>
           <div class="footer-partners">
-            <a href="https://uvs-vt.org" target="_blank" rel="noopener" aria-label="Upper Valley Services"><img src="assets/images/uvs-logo.jpg" alt="Upper Valley Services" /></a>
-            <a href="https://lincolnstreetinc.org" target="_blank" rel="noopener" aria-label="Lincoln Street, Inc."><img src="assets/images/lincoln-logo.jpg" alt="Lincoln Street, Inc." /></a>
+            <a href="https://uvs-vt.org" target="_blank" rel="noopener" aria-label="Upper Valley Services"><img src="assets/images/uvs-logo.jpg" alt="Upper Valley Services" width="130" height="64" loading="lazy" decoding="async" /></a>
+            <a href="https://lincolnstreetinc.org" target="_blank" rel="noopener" aria-label="Lincoln Street, Inc."><img src="assets/images/lincoln-logo.jpg" alt="Lincoln Street, Inc." width="130" height="82" loading="lazy" decoding="async" /></a>
           </div>
           <ul>
             <li><a href="tel:8026625978">802-662-5978</a></li>
@@ -129,7 +156,9 @@
     </div>
   </footer>
 
-  <script src="js/content.js?v=20260731"></script>
-  <script src="js/main.js?v=20260731"></script>
+  <script src="js/supabase-config.js?v=20261116"></script>
+  <script src="js/i18n-ne.js?v=20261116"></script>
+  <script src="js/content.js?v=20261116"></script>
+  <script src="js/main.js?v=20261116"></script>
 </body>
 </html>

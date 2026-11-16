@@ -8,10 +8,24 @@
   <link rel="icon" href="assets/images/logo.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Lato:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/admin.css?v=20260731" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Lato:wght@400;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css?v=20261116" />
 </head>
-<body>
+<body class="locked">
+
+  <!-- ================= SIGN IN ================= -->
+  <div class="ad-lock" id="lock">
+    <form class="ad-lock-card" id="lockform" autocomplete="off">
+      <img src="assets/images/logo.jpg" alt="Vermont Comforts of Home" />
+      <h1>Site Editor</h1>
+      <p>Enter the editor passcode to continue.</p>
+      <label class="sr" for="passcode">Passcode</label>
+      <input id="passcode" name="passcode" type="password" placeholder="Passcode" autocomplete="current-password" required />
+      <button class="ad-btn plum" type="submit" id="unlock">Sign in</button>
+      <p class="ad-lock-err" id="lockerr" role="alert"></p>
+      <a class="ad-lock-back" href="index.html">← Back to the website</a>
+    </form>
+  </div>
 
   <!-- ================= TOP BAR ================= -->
   <header class="ad-top">
@@ -35,8 +49,12 @@
         Discard
       </button>
       <button class="ad-btn plum" id="gopublish" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-        Publish
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+        <span class="lbl">Save &amp; publish</span>
+      </button>
+      <button class="ad-btn ghost" id="signout" type="button" title="Sign out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        <span class="lbl">Sign out</span>
       </button>
     </div>
   </header>
@@ -82,6 +100,10 @@
             Click any text on the page to edit it. Click a photo to swap it.
           </span>
           <select class="ad-pagesel" id="pagesel" aria-label="Choose a page" autocomplete="off"></select>
+          <div class="ad-seg ad-langs" id="langs" role="group" aria-label="Language being edited">
+            <button type="button" data-lang="en" class="on">English</button>
+            <button type="button" data-lang="ne" lang="ne">नेपाली</button>
+          </div>
           <div class="ad-seg" id="widths">
             <button type="button" data-w="full" class="on" title="Full width">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
@@ -119,37 +141,54 @@
         <div class="ad-scroll">
           <div class="ad-head">
             <h2>Publish your changes</h2>
-            <p>Your edits are saved in this browser only. To put them on the live site, download the content file and drop it into the project.</p>
-          </div>
-
-          <div class="ad-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/></svg>
-            <div>
-              <p><strong>Nobody else can see these changes yet.</strong> They live in this browser until the file below is added to the site.</p>
-              <p>Use <em>View site</em> in the top bar to see exactly how they will look.</p>
-            </div>
+            <p class="mode-live">Edits are kept in this browser until you press <strong>Save &amp; publish</strong>. Then they are live on the website for everyone, straight away.</p>
+            <p class="mode-file">Online saving is not switched on yet, so edits stay in this browser. To put them live, download the content file and add it to the project.</p>
           </div>
 
           <h3>What you changed</h3>
           <div class="changes" id="changes"></div>
 
-          <h3 style="margin-top:28px">Put it live</h3>
-          <ol class="steps">
-            <li><div><strong>Download the content file</strong><p>It is called <code>content.json</code>.</p>
-              <div style="margin-top:9px;display:flex;gap:8px;flex-wrap:wrap">
-                <button class="ad-btn" id="download" type="button">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-                  Download content.json
-                </button>
-                <button class="ad-btn light" id="copy" type="button">Copy to clipboard</button>
+          <div class="mode-live" style="margin-top:22px">
+            <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+              <button class="ad-btn plum" id="publishnow" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+                Save &amp; publish now
+              </button>
+              <span class="ad-muted" id="lastsaved"></span>
+            </div>
+            <div class="ad-note" style="margin-top:22px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/></svg>
+              <div>
+                <p><strong>Every save is kept.</strong> If something goes wrong, the previous versions are in Supabase (table <code>site_content_history</code>) and can be restored.</p>
+                <p>Use <em>View site</em> in the top bar to check how your unsaved edits look before publishing.</p>
               </div>
-            </div></li>
-            <li><div><strong>Replace the file in the project</strong><p>Put it in the <code>data</code> folder, overwriting the old <code>data/content.json</code>.</p></div></li>
-            <li><div><strong>Redeploy</strong><p>Push to the repository, or drag the project folder onto Vercel. The site updates for everyone within a minute.</p></div></li>
-            <li><div><strong>Clear the local draft</strong><p>Once the new file is live, clear the draft so this editor reads from the published site again.</p>
-              <div style="margin-top:9px"><button class="ad-btn danger" id="clear" type="button">It's live — clear my draft</button></div>
-            </div></li>
-          </ol>
+            </div>
+            <h3 style="margin-top:28px">Backup</h3>
+            <p class="ad-muted" style="margin-top:0">Download a copy of everything on the site as a file.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="ad-btn light" data-download type="button">Download content.json</button>
+            </div>
+          </div>
+
+          <div class="mode-file">
+            <h3 style="margin-top:28px">Put it live</h3>
+            <ol class="steps">
+              <li><div><strong>Download the content file</strong><p>It is called <code>content.json</code>.</p>
+                <div style="margin-top:9px;display:flex;gap:8px;flex-wrap:wrap">
+                  <button class="ad-btn" data-download type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    Download content.json
+                  </button>
+                  <button class="ad-btn light" id="copy" type="button">Copy to clipboard</button>
+                </div>
+              </div></li>
+              <li><div><strong>Replace the file in the project</strong><p>Put it in the <code>data</code> folder, overwriting the old <code>data/content.json</code>.</p></div></li>
+              <li><div><strong>Redeploy</strong><p>Push to the repository. The site updates for everyone within a minute.</p></div></li>
+              <li><div><strong>Clear the local draft</strong><p>Once the new file is live, clear the draft so this editor reads from the published site again.</p>
+                <div style="margin-top:9px"><button class="ad-btn danger" id="clear" type="button">It's live — clear my draft</button></div>
+              </div></li>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -164,7 +203,7 @@
           <div class="card"><div class="body">
             <h3>Editing text</h3>
             <ul>
-              <li>Open the <strong>Pages</strong> tab and pick a page.</li>
+              <li>Open the <strong>Pages</strong> tab and pick a page. Use <strong>English / नेपाली</strong> above the page to choose which language you are editing.</li>
               <li>Hover — anything with a dashed green outline can be edited. Click it and type.</li>
               <li>The floating toolbar gives you <strong>bold</strong>, <em>italic</em>, underline, links, text size, alignment and brand colours.</li>
               <li>Select some words first to format just those words; with nothing selected, colour and size apply to the whole block.</li>
@@ -184,7 +223,17 @@
             <h3>Photos</h3>
             <ul>
               <li>Click any photo to replace it, either by choosing a file or pasting an image address.</li>
-              <li>Uploaded photos are stored inside the content file, so keep them small (under about 500&nbsp;KB). For anything larger, add the file to <code>assets/images</code> and point at it by name.</li>
+              <li>Uploaded photos are stored online with the site (up to 8&nbsp;MB each). The same photo shows in both languages.</li>
+            </ul>
+          </div></div>
+
+          <div class="card"><div class="body">
+            <h3>Nepali (नेपाली)</h3>
+            <ul>
+              <li>Every page has a Nepali version that visitors can switch to at the top right of the site.</li>
+              <li>Switch the editor to <strong>नेपाली</strong> and click any text to change the Nepali wording. English and Nepali are saved separately.</li>
+              <li>If you change English text, its old Nepali translation no longer matches, so that block shows in English on the Nepali site until you add the Nepali for it.</li>
+              <li>On the Staff tab, each group and job title has an optional Nepali box.</li>
             </ul>
           </div></div>
 
@@ -199,14 +248,14 @@
 
           <div class="card"><div class="body">
             <h3>Getting back here</h3>
-            <p>Triple-click the logo/banner in the footer of any page. There is no password — anyone who knows the trick can edit, so keep it to yourself.</p>
+            <p>Triple-click the logo/banner in the footer of any page, then enter the passcode. Press <strong>Sign out</strong> when you are done on a shared computer.</p>
           </div></div>
 
           <div class="ad-note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/></svg>
             <div>
-              <p><strong>Changes are saved in this browser.</strong> They will not appear for visitors, and they will not follow you to another computer, until you publish (see the Publish tab).</p>
-              <p>Clearing your browser data clears unpublished drafts, so publish when you are happy.</p>
+              <p><strong>Edits are kept in this browser until you press Save &amp; publish.</strong> Visitors see nothing until then, and unsaved edits do not follow you to another computer.</p>
+              <p>Clearing your browser data clears unsaved edits, so publish when you are happy.</p>
             </div>
           </div>
         </div>
@@ -215,6 +264,9 @@
     </main>
   </div>
 
-  <script src="js/admin.js?v=20260731"></script>
+  <script src="js/supabase-config.js?v=20261116"></script>
+  <script src="js/backend.js?v=20261116"></script>
+  <script src="js/i18n-ne.js?v=20261116"></script>
+  <script src="js/admin.js?v=20261116"></script>
 </body>
 </html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/ne/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/participants.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/participants.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/participants.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/participants.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/ne/participants.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/participants.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/participants.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/participants.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/home-care-providers.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/home-care-providers.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/home-care-providers.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/home-care-providers.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/ne/home-care-providers.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/home-care-providers.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/home-care-providers.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/home-care-providers.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/about.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/about.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/about.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/ne/about.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/about.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/about.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/about.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/contact.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/contact.html"/>
+  </url>
+  <url>
+    <loc>https://www.vtcomfortsofhome.org/ne/contact.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vtcomfortsofhome.org/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://www.vtcomfortsofhome.org/ne/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vtcomfortsofhome.org/contact.html"/>
+  </url>
+</urlset>

@@ -3,3 +3,5 @@ Allow: /
 
 # The site editor is not for visitors and should not be indexed.
 Disallow: /admin.html
+
+Sitemap: https://www.vtcomfortsofhome.org/sitemap.xml

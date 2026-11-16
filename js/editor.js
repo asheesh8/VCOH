@@ -26,11 +26,18 @@
     ? JSON.parse(JSON.stringify(VCOH.content))
     : { version: 1, updated: new Date().toISOString(), pages: {}, team: [] };
 
+  /* English edits live in doc.pages; Nepali edits in doc.ne.pages, laid
+     over the automatic translation. */
   function sections() {
-    doc.pages = doc.pages || {};
-    doc.pages[VCOH.page] = doc.pages[VCOH.page] || {};
-    doc.pages[VCOH.page].sections = doc.pages[VCOH.page].sections || {};
-    return doc.pages[VCOH.page].sections;
+    var root = doc;
+    if (VCOH.lang === "ne") {
+      doc.ne = doc.ne || {};
+      root = doc.ne;
+    }
+    root.pages = root.pages || {};
+    root.pages[VCOH.page] = root.pages[VCOH.page] || {};
+    root.pages[VCOH.page].sections = root.pages[VCOH.page].sections || {};
+    return root.pages[VCOH.page].sections;
   }
 
   function save() {
@@ -486,6 +493,31 @@
     var img = panel._for, f = filePicker.files && filePicker.files[0];
     filePicker.value = "";
     if (!img || !f) return;
+    var field = panel.querySelector("[data-src]");
+    var useFile = function (src, label) {
+      img.setAttribute("src", src);
+      recordAttrs(img, { src: src });
+      if (field) field.value = label || src;
+      place(panel, img);
+    };
+
+    /* With Supabase set up, photos go to storage and only their address is
+       saved. Without it they are embedded in the content, so keep them small. */
+    var backend = null;
+    try { backend = parent.VCOHBackend && parent.VCOHBackend.configured ? parent.VCOHBackend : null; } catch (e) {}
+    if (backend) {
+      if (f.size > 8 * 1024 * 1024) {
+        alert("That image is " + Math.round(f.size / 1024 / 1024) + " MB. Please use one under 8 MB.");
+        return;
+      }
+      if (field) field.value = "Uploading…";
+      backend.upload(f).then(function (url) { useFile(url); }, function (err) {
+        if (field) field.value = img.getAttribute("src") || "";
+        alert("The photo could not be uploaded. " + (err && err.message ? err.message : ""));
+      });
+      return;
+    }
+
     if (f.size > 1.5 * 1024 * 1024) {
       alert("That image is " + Math.round(f.size / 1024) + " KB. Please use one under 1.5 MB.");
       return;
@@ -493,13 +525,7 @@
     if (f.size > 500 * 1024 && !confirm("That image is " + Math.round(f.size / 1024) +
       " KB, which makes the saved content large. Use it anyway?")) return;
     var fr = new FileReader();
-    fr.onload = function () {
-      img.setAttribute("src", fr.result);
-      recordAttrs(img, { src: fr.result });
-      var field = panel.querySelector("[data-src]");
-      if (field) field.value = "(uploaded photo)";
-      place(panel, img);
-    };
+    fr.onload = function () { useFile(fr.result, "(uploaded photo)"); };
     fr.readAsDataURL(f);
   });
 
@@ -554,7 +580,13 @@
         ? '<div class="row"><button class="b alt" data-dup>' + ICONS.dup + "Duplicate</button>" +
           '<button class="b danger" data-del>' + ICONS.del + "Delete</button></div>"
         : "") +
-      '<p class="hint">Photos are stored inside the site content, so keep them under about 500&nbsp;KB. Large images are better added to <code>assets/images</code>.</p>' +
+      (function () {
+        var live = false;
+        try { live = !!(parent.VCOHBackend && parent.VCOHBackend.configured); } catch (e) {}
+        return live
+          ? '<p class="hint">Photos up to 8&nbsp;MB are uploaded and stored online.</p>'
+          : '<p class="hint">Photos are stored inside the site content, so keep them under about 500&nbsp;KB.</p>';
+      })() +
       "</div>";
     panel._for = img;
     panel.style.display = "block";
@@ -629,6 +661,15 @@
   }, true);
 
   addEventListener("beforeunload", function () { if (active) record(active); });
+
+  /* Cmd/Ctrl+S inside the page: save the block and ask the editor to publish. */
+  addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      if (active) record(active);
+      post("save");
+    }
+  }, true);
 
   addEventListener("message", function (e) {
     if (e.origin !== location.origin || !e.data || e.data.source !== "vcoh-admin") return;

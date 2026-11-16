@@ -1,0 +1,25 @@
+# Vermont Comforts of Home
+
+> A non-profit Adult Family Care program in Vermont, run jointly by Upper Valley Services, Inc. (Essex Junction, 802-662-5978) and Lincoln Street, Inc. (Springfield, 802-886-1833). It provides shared living and care coordination under Vermont's Choices for Care initiative, so adults who need a nursing-home level of care can live in a home in their community instead. The site is available in English and Nepali.
+
+## Pages
+
+- [Home](https://www.vtcomfortsofhome.org/): what the program is, who it serves, and the counties covered.
+- [Participants](https://www.vtcomfortsofhome.org/participants.html): care coordination, shared living, who qualifies, cost (Medicaid; about $826.65/month toward room and board), and how placement works.
+- [Home Care Providers](https://www.vtcomfortsofhome.org/home-care-providers.html): becoming a paid home care provider — responsibilities, requirements, stipend and support. Vermont now allows payment to adult children caring for their parents.
+- [About](https://www.vtcomfortsofhome.org/about.html): values, services, and the staff of both partner agencies.
+- [Contact](https://www.vtcomfortsofhome.org/contact.html): office addresses, phone numbers and a contact form.
+
+## Nepali (नेपाली)
+
+- [गृहपृष्ठ](https://www.vtcomfortsofhome.org/ne/)
+- [सहभागीहरू](https://www.vtcomfortsofhome.org/ne/participants.html)
+- [घरमा हेरचाह गर्ने प्रदायकहरू](https://www.vtcomfortsofhome.org/ne/home-care-providers.html)
+- [हाम्रो बारेमा](https://www.vtcomfortsofhome.org/ne/about.html)
+- [सम्पर्क](https://www.vtcomfortsofhome.org/ne/contact.html)
+
+## Service area
+
+Upper Valley Services: Chittenden, Franklin, Grand Isle, Lamoille, Caledonia, Washington and Orange counties.
+Lincoln Street, Inc.: Addison, Rutland, Windsor, Windham and Bennington counties.
+Essex and Orleans counties: referral / partner area.

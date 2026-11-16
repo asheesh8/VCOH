@@ -254,3 +254,48 @@ code { background: var(--cream-2); padding: 1px 6px; border-radius: 5px; font-si
   .ad-actions { width: 100%; }
   .ad-stage { padding: 8px; }
 }
+
+/* ---------- sign in ---------- */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ad-lock {
+  position: fixed; inset: 0; z-index: 1000; display: none; place-items: center; padding: 16px;
+  background: radial-gradient(1200px 600px at 50% -10%, #3c4a22, var(--chrome));
+}
+body.locked .ad-lock { display: grid; }
+body.locked .ad-top, body.locked .ad-shell { visibility: hidden; }
+.ad-lock-card {
+  width: min(380px, 100%); background: var(--paper); border-radius: 18px; padding: 30px 28px 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.4); text-align: center; display: grid; gap: 12px;
+}
+.ad-lock-card img { height: 64px; width: auto; margin: 0 auto 4px; }
+.ad-lock-card h1 { font-size: 1.6rem; margin: 0; }
+.ad-lock-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+.ad-lock-card input {
+  width: 100%; padding: 13px 14px; border: 1.5px solid var(--line); border-radius: 10px;
+  font: 400 1rem/1.2 var(--sans); background: #fff; color: var(--ink); text-align: center; letter-spacing: .04em;
+}
+.ad-lock-card input:focus { outline: 0; border-color: var(--plum); box-shadow: 0 0 0 3px rgba(97,50,70,.16); }
+.ad-lock-card .ad-btn { justify-content: center; padding: 14px 16px; }
+.ad-lock-err { color: #8d3247 !important; font-weight: 700; min-height: 1.2em; }
+.ad-lock-back { color: var(--muted); font-size: .85rem; text-decoration: none; }
+.ad-lock-back:hover { color: var(--green-deep); text-decoration: underline; }
+
+/* ---------- live vs file mode ---------- */
+body.live .mode-file, body.file .mode-live { display: none !important; }
+.ad-muted { color: var(--muted); font-size: .88rem; }
+.ad-langs button { font-weight: 800; padding: 7px 12px; }
+.ad-langs button[lang="ne"] { font-family: "Noto Sans Devanagari", var(--sans); }
+input.ne { font-family: "Noto Sans Devanagari", var(--sans) !important; }
+.tier-top input.ne { text-transform: none; letter-spacing: 0; font-weight: 700; }
+.prow { flex-wrap: wrap; }
+.prow input.ne { flex: 1 1 140px; }
+@media (max-width: 860px) {
+  .ad-actions .lbl { display: none; }
+  .ad-actions #gopublish .lbl { display: inline; }
+}
+@media (max-width: 640px) {
+  .ad-langs { display: flex; margin-left: 0; }
+}
+.prow input[data-field="role"] { flex: 1.4 1 160px; }
+.prow input.nm { flex: 1 1 150px; }
+.prow input.ne::placeholder { color: #a39c8c; }
