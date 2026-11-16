@@ -101,24 +101,31 @@ English.
 
 ## Contact form
 
-The form posts to `api/contact.js`, a Vercel function that emails the intake
-team through [Brevo](https://www.brevo.com)'s transactional API (free plan:
-300 emails a day): VCOH.Intake@uvs-vt.org, John.hooley@uvs-vt.org,
-Desireah.Ladieu@uvs-vt.org and Mary.Mougey@uvs-vt.org. Reply-to is set to the
-visitor, so staff can just hit Reply. A hidden honeypot field and a
-"submitted in under 3 seconds" check quietly drop bots.
+The form posts to `api/contact.js`, a Vercel function that validates the
+message, quietly drops bots (a hidden honeypot field and a "submitted in under
+3 seconds" check), and hands it to a Google Apps Script web app
+(`apps-script/contact.gs`). The script sends it from Ashish's Google account to
+VCOH.Intake@uvs-vt.org, John.hooley@uvs-vt.org, Desireah.Ladieu@uvs-vt.org and
+Mary.Mougey@uvs-vt.org, with Reply-To set to the visitor. The script URL and
+its shared secret live only in Vercel and in the script, never in the page.
 
-Set these in Vercel → Settings → Environment Variables:
+**Setup:**
 
-| Variable | Value |
-|----------|-------|
-| `BREVO_API_KEY` | Brevo API key (SMTP & API → API Keys) |
-| `CONTACT_FROM_EMAIL` | A verified Brevo sender, e.g. `studio@sol-arkitech.com` (authenticate the domain in Brevo for good deliverability) |
-| `CONTACT_FROM_NAME` | Optional, default `VCOH Website` |
-| `CONTACT_TO` | Optional override, comma-separated |
+1. script.google.com → **New project**, name it "VCOH contact form", and paste
+   in `apps-script/contact.gs`.
+2. **Project Settings → Script Properties → Add**: `SHARED_SECRET` = a long
+   random string.
+3. Pick `testSetup` in the toolbar → **Run** → allow the permissions.
+4. **Deploy → New deployment → Web app**. Execute as **Me**, Who has access
+   **Anyone**. Copy the URL ending in `/exec`.
+5. Vercel → Settings → Environment Variables: `CONTACT_SCRIPT_URL` = that
+   URL, `CONTACT_SCRIPT_SECRET` = the same secret. Then redeploy.
 
-Until the key is set, the form tells visitors their message could not be sent
-and asks them to call 802-662-5978. It never pretends a message went through.
+To change recipients, edit `RECIPIENTS` in the script, then go to **Deploy →
+Manage deployments → Edit → New version**. A personal Gmail account can email
+about 100 recipients a day, which is ~25 form messages; Google Workspace allows
+1,500. Until the variables are set, the form tells visitors their message
+could not be sent and asks them to call 802-662-5978.
 
 ## SEO
 

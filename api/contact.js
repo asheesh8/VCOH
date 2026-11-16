@@ -1,20 +1,16 @@
-/* Vercel serverless function: contact form → email via Brevo (transactional API).
+/* Vercel serverless function: contact form → email.
+ *
+ * Validates the message, drops bots, then hands it to a Google Apps Script web
+ * app (apps-script/contact.gs) that sends it from your Google account to the
+ * intake team. The script URL and secret stay on the server.
  *
  * Environment variables (Vercel → Project → Settings → Environment Variables):
- *   BREVO_API_KEY             Brevo API key (SMTP & API → API Keys). Without it the
- *                             form returns 503 and tells the visitor to call instead.
- *   CONTACT_FROM_EMAIL        Verified Brevo sender, e.g. studio@sol-arkitech.com
- *   CONTACT_FROM_NAME         Optional, default "VCOH Website"
- *   CONTACT_TO                Optional, comma-separated. Defaults to the intake list below.
- *   CONTACT_ALLOWED_ORIGINS   Optional, comma-separated extra origins.
+ *   CONTACT_SCRIPT_URL      the Apps Script web app URL (ends in /exec). Without it
+ *                           the form returns 503 and tells the visitor to call.
+ *   CONTACT_SCRIPT_SECRET   the same value as SHARED_SECRET in the script.
+ *   CONTACT_ALLOWED_ORIGINS optional, comma-separated extra origins.
+ * Recipients are set in the Apps Script.
  */
-
-const DEFAULT_TO = [
-  "VCOH.Intake@uvs-vt.org",
-  "John.hooley@uvs-vt.org",
-  "Desireah.Ladieu@uvs-vt.org",
-  "Mary.Mougey@uvs-vt.org"
-];
 
 const ORIGINS = [
   "https://www.vtcomfortsofhome.org",
@@ -86,53 +82,28 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "bad_email" });
   }
 
-  if (!process.env.BREVO_API_KEY || !process.env.CONTACT_FROM_EMAIL) {
+  if (!process.env.CONTACT_SCRIPT_URL || !process.env.CONTACT_SCRIPT_SECRET) {
     return res.status(503).json({ ok: false, error: "delivery_off" });
   }
 
-  const to = String(process.env.CONTACT_TO || "").split(",").map((s) => s.trim()).filter(Boolean);
-  const recipients = to.length ? to : DEFAULT_TO;
-
-  const rows = [
-    ["Name", name],
-    ["Email", email || "—"],
-    ["Phone", phone || "—"],
-    ["Site language", lang === "ne" ? "Nepali" : "English"]
-  ];
-  const html =
-    '<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#303030">' +
-    '<h2 style="color:#35520a;margin:0 0 12px">New message from vtcomfortsofhome.org</h2>' +
-    '<table style="border-collapse:collapse">' +
-    rows.map(([k, v]) => '<tr><td style="padding:4px 14px 4px 0;color:#6f6a5e">' + k + "</td><td style=\"padding:4px 0\"><strong>" + esc(v) + "</strong></td></tr>").join("") +
-    "</table>" +
-    '<p style="margin:16px 0 6px;color:#6f6a5e">Message</p>' +
-    '<div style="white-space:pre-wrap;border-left:3px solid #517e02;padding:8px 12px;background:#f7f4ec">' + esc(message) + "</div>" +
-    "</div>";
-  const text = rows.map(([k, v]) => k + ": " + v).join("\n") + "\n\nMessage:\n" + message;
-
-  const payload = {
-    sender: { name: process.env.CONTACT_FROM_NAME || "VCOH Website", email: process.env.CONTACT_FROM_EMAIL },
-    to: recipients.map((email) => ({ email })),
-    subject: "Website message from " + name,
-    htmlContent: html,
-    textContent: text,
-    tags: ["vcoh-contact"]
-  };
-  if (email) payload.replyTo = { email, name };
-
   try {
-    const r = await fetch("https://api.brevo.com/v3/smtp/email", {
+    /* Apps Script answers with a redirect to the result; fetch follows it. */
+    const r = await fetch(process.env.CONTACT_SCRIPT_URL, {
       method: "POST",
-      headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(payload)
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ secret: process.env.CONTACT_SCRIPT_SECRET, name, email, phone, message, lang }),
+      redirect: "follow"
     });
-    if (!r.ok) {
-      console.error("brevo_failed", r.status, await r.text());
+    const text = await r.text();
+    let out = null;
+    try { out = JSON.parse(text); } catch (e) {}
+    if (!r.ok || !out || !out.ok) {
+      console.error("script_failed", r.status, out ? out.error : text.slice(0, 200));
       return res.status(502).json({ ok: false, error: "send_failed" });
     }
     return res.status(200).json({ ok: true });
   } catch (e) {
-    console.error("brevo_error", e && e.message);
+    console.error("script_error", e && e.message);
     return res.status(502).json({ ok: false, error: "send_failed" });
   }
 };
