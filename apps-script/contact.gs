@@ -13,16 +13,19 @@
  *        Execute as: Me      Who has access: Anyone
  *      Copy the web app URL (ends in /exec) into Vercel as CONTACT_SCRIPT_URL.
  *
- * Who gets the emails: by default the four addresses in DEFAULT_RECIPIENTS.
- * To change that without editing code (for example while testing), add a
- * Script Property RECIPIENTS with a comma-separated list of addresses.
- * Delete the property to go back to the default list.
+ * Who gets the emails: while TEST_MODE is true, only TEST_RECIPIENTS (and the
+ * subject starts with [TEST]). Set TEST_MODE to false, save, and redeploy a
+ * new version (Deploy → Manage deployments → Edit → New version) to send to
+ * the four intake addresses in RECIPIENTS.
  *
  * Quota: a personal Gmail account can email about 100 recipients a day
  * (4 per message here, so ~25 messages a day). Google Workspace: 1,500.
  */
 
-var DEFAULT_RECIPIENTS = [
+var TEST_MODE = true;
+var TEST_RECIPIENTS = ["mukti.subedi@uvs-vt.org"];
+
+var RECIPIENTS = [
   "VCOH.Intake@uvs-vt.org",
   "John.hooley@uvs-vt.org",
   "Desireah.Ladieu@uvs-vt.org",
@@ -31,11 +34,7 @@ var DEFAULT_RECIPIENTS = [
 var SENDER_NAME = "VCOH Website";
 
 function recipients() {
-  var list = PropertiesService.getScriptProperties().getProperty("RECIPIENTS");
-  var out = String(list || "").split(",").map(function (s) { return s.trim(); }).filter(function (s) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-  });
-  return out.length ? out : DEFAULT_RECIPIENTS;
+  return TEST_MODE ? TEST_RECIPIENTS : RECIPIENTS;
 }
 
 function doPost(e) {
@@ -75,7 +74,7 @@ function doPost(e) {
 
   var mail = {
     to: to.join(","),
-    subject: "Website message from " + name,
+    subject: (TEST_MODE ? "[TEST] " : "") + "Website message from " + name,
     body: text,
     htmlBody: html,
     name: SENDER_NAME
@@ -94,7 +93,7 @@ function doGet() {
 function testSetup() {
   var secret = PropertiesService.getScriptProperties().getProperty("SHARED_SECRET");
   Logger.log(secret ? "SHARED_SECRET is set." : "SHARED_SECRET is missing — add it in Project Settings → Script Properties.");
-  Logger.log("Messages will go to: " + recipients().join(", "));
+  Logger.log((TEST_MODE ? "TEST MODE — " : "") + "Messages will go to: " + recipients().join(", "));
   Logger.log("Emails left today: " + MailApp.getRemainingDailyQuota());
 }
 
