@@ -121,7 +121,7 @@ its shared secret live only in Vercel and in the script, never in the page.
 5. Vercel → Settings → Environment Variables: `CONTACT_SCRIPT_URL` = that
    URL, `CONTACT_SCRIPT_SECRET` = the same secret. Then redeploy.
 
-To change recipients, edit `RECIPIENTS` in the script, then go to **Deploy →
+To send somewhere else (for example while testing), add a Script Property `RECIPIENTS` with comma-separated addresses; delete it to go back to the four defaults. To change the defaults, edit `DEFAULT_RECIPIENTS` in the script, then go to **Deploy →
 Manage deployments → Edit → New version**. A personal Gmail account can email
 about 100 recipients a day, which is ~25 form messages; Google Workspace allows
 1,500. Until the variables are set, the form tells visitors their message

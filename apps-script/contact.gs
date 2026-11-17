@@ -13,17 +13,30 @@
  *        Execute as: Me      Who has access: Anyone
  *      Copy the web app URL (ends in /exec) into Vercel as CONTACT_SCRIPT_URL.
  *
+ * Who gets the emails: by default the four addresses in DEFAULT_RECIPIENTS.
+ * To change that without editing code (for example while testing), add a
+ * Script Property RECIPIENTS with a comma-separated list of addresses.
+ * Delete the property to go back to the default list.
+ *
  * Quota: a personal Gmail account can email about 100 recipients a day
  * (4 per message here, so ~25 messages a day). Google Workspace: 1,500.
  */
 
-var RECIPIENTS = [
+var DEFAULT_RECIPIENTS = [
   "VCOH.Intake@uvs-vt.org",
   "John.hooley@uvs-vt.org",
   "Desireah.Ladieu@uvs-vt.org",
   "Mary.Mougey@uvs-vt.org"
 ];
 var SENDER_NAME = "VCOH Website";
+
+function recipients() {
+  var list = PropertiesService.getScriptProperties().getProperty("RECIPIENTS");
+  var out = String(list || "").split(",").map(function (s) { return s.trim(); }).filter(function (s) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+  });
+  return out.length ? out : DEFAULT_RECIPIENTS;
+}
 
 function doPost(e) {
   var body = {};
@@ -40,7 +53,8 @@ function doPost(e) {
   if (!name || !message || (!email && !phone)) return reply({ ok: false, error: "missing_fields" });
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) email = "";
 
-  if (MailApp.getRemainingDailyQuota() < RECIPIENTS.length) {
+  var to = recipients();
+  if (MailApp.getRemainingDailyQuota() < to.length) {
     return reply({ ok: false, error: "quota" });
   }
 
@@ -60,7 +74,7 @@ function doPost(e) {
   var text = rows.map(function (r) { return r[0] + ": " + r[1]; }).join("\n") + "\n\nMessage:\n" + message;
 
   var mail = {
-    to: RECIPIENTS.join(","),
+    to: to.join(","),
     subject: "Website message from " + name,
     body: text,
     htmlBody: html,
@@ -80,6 +94,7 @@ function doGet() {
 function testSetup() {
   var secret = PropertiesService.getScriptProperties().getProperty("SHARED_SECRET");
   Logger.log(secret ? "SHARED_SECRET is set." : "SHARED_SECRET is missing — add it in Project Settings → Script Properties.");
+  Logger.log("Messages will go to: " + recipients().join(", "));
   Logger.log("Emails left today: " + MailApp.getRemainingDailyQuota());
 }
 
