@@ -20,6 +20,8 @@ const ORIGINS = [
   "https://vcoh.vercel.app"
 ];
 
+const { spamCheck } = require("./_spam");
+
 const LIMITS = { name: 120, email: 200, phone: 40, message: 5000 };
 
 function esc(s) {
@@ -63,11 +65,21 @@ module.exports = async function handler(req, res) {
 
   const body = await readBody(req);
 
-  /* Spam checks: real visitors never see or fill the "company" field, and
-     nobody types a message in under three seconds. Bots get a quiet "ok". */
-  if (clean(body.company, 200)) return res.status(200).json({ ok: true });
+  /* Spam checks. Spam gets a quiet "ok" so the sender thinks it worked and
+     doesn't try again, and nothing is emailed. Each drop is logged in Vercel
+     (Project → Logs, search "spam_dropped") so a wrongly blocked message can
+     still be found.
+     1. Honeypot: real visitors never see or fill the "company" field.
+     2. Timing: the page stamps when the form loaded. A missing stamp means the
+        post didn't come from our page; under four seconds is a bot. */
+  const drop = (why, extra) => {
+    console.log("spam_dropped", JSON.stringify(Object.assign({ why }, extra || {})));
+    return res.status(200).json({ ok: true });
+  };
+  if (clean(body.company, 200)) return drop("honeypot");
   const started = Number(body.started || 0);
-  if (started && Date.now() - started < 3000) return res.status(200).json({ ok: true });
+  const age = Date.now() - started;
+  if (!started || age < 4000 || age > 1000 * 60 * 60 * 24) return drop("timing", { age });
 
   const name = clean(body.name, LIMITS.name);
   const email = clean(body.email, LIMITS.email);
@@ -80,6 +92,12 @@ module.exports = async function handler(req, res) {
   }
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ ok: false, error: "bad_email" });
+  }
+
+  /* 3. Content: sales, lead-gen, SEO pitches and link-stuffed messages. */
+  const verdict = spamCheck({ name, email, message });
+  if (verdict.spam) {
+    return drop("content", { score: verdict.score, reasons: verdict.reasons, name, email, message: message.slice(0, 300) });
   }
 
   if (!process.env.CONTACT_SCRIPT_URL || !process.env.CONTACT_SCRIPT_SECRET) {
